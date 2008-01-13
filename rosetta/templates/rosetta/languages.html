@@ -1,0 +1,34 @@
+{% extends "rosetta/base.html" %}
+{% block breadcumbs %}<a href="{% url rosetta-pick-file %}">{% trans "Home" %}</a> &rsaquo; {% trans "Language selection" %}{% endblock %}
+{% block main %}
+    
+    {% for lid,language,pos in languages %}
+    {% if pos %}
+        <div class="module">
+            <h2>{{language}}</h2>
+            <table cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>{% trans "File" %}</th>
+                        <th class="r">{% trans "Messages" %}</th>                        
+                        <th class="r">{% trans "Translated" %}</th>
+                        <th class="r">{% trans "Obsolete"%}</th>
+                        <th class="r">{% trans "Progress"%}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for path,po in pos %}
+                    <tr class="{% cycle row1,row2 %}">
+                        <td><a href="{% url rosetta-language-selection lid,forloop.counter0 %}{% if do_self %}?self{% endif %}">{{ path }}</a></td>
+                        <td class="r">{{po|length}}</td>
+                        <td class="r">{{po.translated_entries|length}}</td>
+                        <td class="r">{{po.obsolete_entries|length}}</td>
+                        <td class="r">{{po.percent_translated|floatformat:2}}%</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+    {% endfor %}    
+{% endblock %}

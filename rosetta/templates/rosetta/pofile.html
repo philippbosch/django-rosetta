@@ -1,0 +1,79 @@
+{% load rosetta %}
+{% extends "rosetta/base.html" %}
+{% block header %}
+    {{block.super}}
+    <div id="user-tools">
+        <p>
+            <span><a href="{% url rosetta-pick-file %}">{% trans "Pick another file" %}</a></span>
+        </p>
+    </div>
+{% endblock %}
+{% block breadcumbs %}
+    <a href="{% url rosetta-pick-file %}">{% trans "Home" %}</a> &rsaquo; 
+    {{ rosetta_i18n_lang_name }} &rsaquo; 
+    {{ rosetta_i18n_fn }} &rsaquo; 
+    {% blocktrans with rosetta_i18n_pofile.percent_translated|floatformat:2 as percent_translated  %}Progress: {{ percent_translated }}%{% endblocktrans %}
+{% endblock %}
+{% block main %}
+    <h1>{% blocktrans  %}Translate into {{rosetta_i18n_lang_name}}{% endblocktrans %}</h1>
+    <ul class="object-tools">
+        <li class="nobubble">{% trans "Display:" %}</li>
+        <li {% ifequal rosetta_i18n_filter 'untranslated' %}class="active"{% endifequal %}><a href="?filter=untranslated">{% trans "Untranslated only" %}</a></li>
+        <li {% ifequal rosetta_i18n_filter 'translated' %}class="active"{% endifequal %}><a href="?filter=translated">{% trans "Translated only" %}</a></li>
+        <li {% ifequal rosetta_i18n_filter 'both' %}class="active"{% endifequal %}><a href="?filter=both">{% trans "Both" %}</a></li>
+    </ul>
+    <div id="changelist" class="module">
+        <form method="post" action="">
+            <table>
+                <thead>
+                    <tr>
+                        <th>{% trans "English" %}</th>
+                        <th>{{ rosetta_i18n_lang_name }}</th>
+                        <th>{% trans "Occurrences(s)" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for  message in messages %}
+                    <tr class="{% cycle row1,row2 %}">
+                        {% if message.msgid_plural %}
+                            <td class="original plural">
+                                <span class="part">{{message.msgid|format_message|linebreaksbr}}</span>
+                                <span class="part">{{message.msgid_plural|format_message|linebreaksbr}}</span>
+                            </td>
+                            <td class="translation">
+                                <textarea rows="{{message.msgid|format_message|lines_count|add:1}}" name="m_{{message.id}}_0">{{message.msgstr_plural.0}}</textarea>
+                                <textarea rows="{{message.msgid_plural|format_message|lines_count|add:1}}" name="m_{{message.id}}_1">{{message.msgstr_plural.1}}</textarea>
+                            </td>
+                        {% else %}
+                            <td class="original">{{ message.msgid|format_message|linebreaksbr }}</td>
+                            <td class="translation"><textarea rows="{{message.msgid|format_message|lines_count|add:1}}" name="m_{{message.id}}">{{message.msgstr}}</textarea></td>
+                        {% endif %}
+                            <td class="location">{% for fn,lineno in message.occurrences %}<code>{{ fn }}:{{lineno}}</code> {% endfor %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="submit-row">
+                <p class="paginator">
+                    <input type="submit" class="default" name="_next" value="{% trans "Save and translate next block" %}"/>
+                    
+                    {% if needs_pagination %}
+                    {% trans "Skip to page:" %}
+                    {% for i in page_range %}
+                        {% ifequal i page %}
+                            <span class="this-page">{{i|add:1}}</span>
+                        {% else %}    
+                            <a href="?page={{i}}">{{i|add:1}}</a>
+                        {% endifequal %}
+                    {% endfor %}
+                    {% else %}
+                    {% trans "Displaying:" %}
+                    {% endif %}
+                    <strong>{% blocktrans count rosetta_i18n_pofile|length as message_number and paginator.hits as hits %}{{hits}}/{{message_number}} message{% plural %}{{hits}}/{{message_number}} messages{% endblocktrans %}</strong>
+
+                    
+                </p>
+            </div>
+        </form>
+    </div>
+{% endblock %}
