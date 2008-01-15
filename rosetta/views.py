@@ -6,7 +6,6 @@ from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
 from rosetta.poutil import find_pos
 from rosetta.polib import pofile
-
 import re,os
 
 
