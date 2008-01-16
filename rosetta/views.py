@@ -14,10 +14,11 @@ def home(request):
     """
     Displays a list of messages to be translated
     """
-
+    
     if 'rosetta_i18n_fn' in request.session:
         rosetta_i18n_fn=request.session.get('rosetta_i18n_fn')
         rosetta_i18n_pofile = request.session.get('rosetta_i18n_pofile')
+        rosetta_i18n_lang_code = request.session['rosetta_i18n_lang_code']
         
         if 'filter' in request.GET:
             if request.GET.get('filter') == 'untranslated' or request.GET.get('filter') == 'translated' or request.GET.get('filter') == 'both':
@@ -52,8 +53,11 @@ def home(request):
                 rosetta_i18n_pofile.save()
                 rosetta_i18n_pofile.save_as_mofile(rosetta_i18n_fn.replace('.po','.mo'))
                 request.session['rosetta_i18n_pofile']=rosetta_i18n_pofile
-                    
-            return HttpResponseRedirect(reverse('rosetta-home'))
+                
+            if '_next' in request.POST:
+                return HttpResponseRedirect(reverse('rosetta-home'))
+            
+        
             
         rosetta_i18n_lang_name = request.session.get('rosetta_i18n_lang_name')
         rosetta_i18n_lang_code = request.session.get('rosetta_i18n_lang_code')
@@ -74,9 +78,54 @@ def home(request):
         if needs_pagination:
             page_range = range(paginator.pages)
         ADMIN_MEDIA_PREFIX = settings.ADMIN_MEDIA_PREFIX
-        return render_to_response('rosetta/pofile.html', locals())
+        
+        return render_to_response('rosetta/pofile.html', locals())      
+        
     else:
         return list_languages(request)
+
+@user_passes_test(lambda user:can_translate(user))
+def download_file(request):
+    import zipfile, tempfile, os
+    # original filename
+    rosetta_i18n_fn=request.session.get('rosetta_i18n_fn', None)
+    # in-session modified catalog
+    rosetta_i18n_pofile = request.session.get('rosetta_i18n_pofile', None)
+    # language code
+    rosetta_i18n_lang_code = request.session.get('rosetta_i18n_lang_code', None)
+    
+    if not rosetta_i18n_lang_code or not rosetta_i18n_pofile or not rosetta_i18n_fn:
+        return HttpResponseRedirect(reverse('rosetta-home'))
+    try:
+        if len(rosetta_i18n_fn.split('/')) >= 5:
+            offered_fn = '_'.join(rosetta_i18n_fn.split('/')[-5:])
+        else:
+            offered_fn = rosetta_i18n_fn.split('/')[-1]
+        # filenames
+        tmpdir=tempfile.gettempdir()
+        zip_fn = str(os.path.join(tmpdir,'%s.%s.zip' %(offered_fn,rosetta_i18n_lang_code)))
+        po_fn = str(os.path.join(tmpdir, rosetta_i18n_fn.split('/')[-1]))
+        mo_fn = str(po_fn.replace('.po','.mo')) # not so smart, huh
+        rosetta_i18n_pofile.save(po_fn)
+        rosetta_i18n_pofile.save_as_mofile(mo_fn)
+        zf = zipfile.ZipFile(zip_fn,'w')
+        zf.write(po_fn, str(po_fn.split('/')[-1]))
+        zf.write(mo_fn, str(mo_fn.split('/')[-1]))
+        zf.close()
+        
+        response = HttpResponse(file(zip_fn).read())
+        response['Content-Disposition'] = 'attachment; filename=%s.%s.zip' %(offered_fn,rosetta_i18n_lang_code)
+        response['Content-Type'] = 'application/x-zip'
+    
+        os.unlink(zip_fn)
+        os.unlink(po_fn)
+        os.unlink(mo_fn)
+
+        return response
+    except Exception, e:
+        return HttpResponseRedirect(reverse('rosetta-home'))
+        #return HttpResponse(e, mimetype="text/plain")
+        
 
 @user_passes_test(lambda user:can_translate(user))
 def list_languages(request):

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-13 11:29+0100\n"
+"POT-Creation-Date: 2008-01-16 17:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: templates/rosetta/languages.html:2 templates/rosetta/pofile.html:12
+#: templates/rosetta/languages.html:2 templates/rosetta/pofile.html:13
 msgid "Home"
 msgstr ""
 
@@ -48,52 +48,56 @@ msgstr ""
 msgid "Pick another file"
 msgstr ""
 
-#: templates/rosetta/pofile.html:15
+#: templates/rosetta/pofile.html:8
+msgid "Download this catalog"
+msgstr ""
+
+#: templates/rosetta/pofile.html:16
 msgid "Progress: %(percent_translated)s%"
 msgstr ""
 
-#: templates/rosetta/pofile.html:18
+#: templates/rosetta/pofile.html:19
 #, python-format
 msgid "Translate into %(rosetta_i18n_lang_name)s"
 msgstr ""
 
-#: templates/rosetta/pofile.html:20
+#: templates/rosetta/pofile.html:21
 msgid "Display:"
 msgstr ""
 
-#: templates/rosetta/pofile.html:21
+#: templates/rosetta/pofile.html:22
 msgid "Untranslated only"
 msgstr ""
 
-#: templates/rosetta/pofile.html:22
+#: templates/rosetta/pofile.html:23
 msgid "Translated only"
 msgstr ""
 
-#: templates/rosetta/pofile.html:23
+#: templates/rosetta/pofile.html:24
 msgid "Both"
 msgstr ""
 
-#: templates/rosetta/pofile.html:30
+#: templates/rosetta/pofile.html:31
 msgid "English"
 msgstr ""
 
-#: templates/rosetta/pofile.html:32
+#: templates/rosetta/pofile.html:33
 msgid "Occurrences(s)"
 msgstr ""
 
-#: templates/rosetta/pofile.html:58
+#: templates/rosetta/pofile.html:60
 msgid "Save and translate next block"
 msgstr ""
 
-#: templates/rosetta/pofile.html:61
+#: templates/rosetta/pofile.html:64
 msgid "Skip to page:"
 msgstr ""
 
-#: templates/rosetta/pofile.html:70
+#: templates/rosetta/pofile.html:73
 msgid "Displaying:"
 msgstr ""
 
-#: templates/rosetta/pofile.html:72
+#: templates/rosetta/pofile.html:75
 #, python-format
 msgid "%(hits)s/%(message_number)s message"
 msgid_plural "%(hits)s/%(message_number)s messages"
