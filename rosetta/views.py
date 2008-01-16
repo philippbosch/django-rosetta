@@ -19,6 +19,7 @@ def home(request):
         rosetta_i18n_fn=request.session.get('rosetta_i18n_fn')
         rosetta_i18n_pofile = request.session.get('rosetta_i18n_pofile')
         rosetta_i18n_lang_code = request.session['rosetta_i18n_lang_code']
+        rosetta_i18n_write = request.session.get('rosetta_i18n_write', True)
         
         if 'filter' in request.GET:
             if request.GET.get('filter') == 'untranslated' or request.GET.get('filter') == 'translated' or request.GET.get('filter') == 'both':
@@ -48,17 +49,17 @@ def home(request):
                     rosetta_i18n_pofile[id].flags.remove('fuzzy')
                     
                         
-            if file_change:
-                rosetta_i18n_pofile.metadata['Last-Translator'] = str("%s %s <%s>" %(request.user.first_name,request.user.last_name,request.user.email))
-                rosetta_i18n_pofile.save()
-                rosetta_i18n_pofile.save_as_mofile(rosetta_i18n_fn.replace('.po','.mo'))
-                request.session['rosetta_i18n_pofile']=rosetta_i18n_pofile
+            if file_change and rosetta_i18n_write:
+                try:
+                    rosetta_i18n_pofile.metadata['Last-Translator'] = str("%s %s <%s>" %(request.user.first_name,request.user.last_name,request.user.email))
+                    rosetta_i18n_pofile.save()
+                    rosetta_i18n_pofile.save_as_mofile(rosetta_i18n_fn.replace('.po','.mo'))
+                except:
+                    request.session['rosetta_i18n_write'] = False
                 
-            if '_next' in request.POST:
+                request.session['rosetta_i18n_pofile']=rosetta_i18n_pofile
                 return HttpResponseRedirect(reverse('rosetta-home'))
-            
-        
-            
+                
         rosetta_i18n_lang_name = request.session.get('rosetta_i18n_lang_name')
         rosetta_i18n_lang_code = request.session.get('rosetta_i18n_lang_code')
         
@@ -165,7 +166,12 @@ def lang_sel(request,langid,idx):
             po[i].id = i
             
         request.session['rosetta_i18n_pofile'] = po
-        
+        try:
+            os.utime(file_,None)
+            request.session['rosetta_i18n_write'] = True
+        except OSError:
+            request.session['rosetta_i18n_write'] = False
+            
         return HttpResponseRedirect(reverse('rosetta-home'))
 
 def can_translate(user):

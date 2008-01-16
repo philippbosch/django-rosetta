@@ -14,6 +14,7 @@
     {{ rosetta_i18n_lang_name }} &rsaquo; 
     {{ rosetta_i18n_fn }} &rsaquo; 
     {% blocktrans with rosetta_i18n_pofile.percent_translated|floatformat:2 as percent_translated  %}Progress: {{ percent_translated }}%{% endblocktrans %}
+    {% if not rosetta_i18n_write %}<span class="alert">{% trans "File is read-only: download the file when done editing!" %}</span>{% endif %}
 {% endblock %}
 {% block main %}
     <h1>{% blocktrans  %}Translate into {{rosetta_i18n_lang_name}}{% endblocktrans %}</h1>

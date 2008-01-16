@@ -14,3 +14,5 @@ p.paginator input { float:right;}
 th.r,td.r {text-align:right;}
 tr.row2 td.original code {background-color:#ffc; padding: 0 0.3em;}
 tr.row1 td.original code {background-color:#ccf;}
+.alert { font-weight:bold;padding:4px 5px 4px 25px; margin-left:1em; color: red; background:transparent url({{ADMIN_MEDIA_PREFIX}}img/admin/icon_alert.gif) 5px .3em no-repeat; }
+
