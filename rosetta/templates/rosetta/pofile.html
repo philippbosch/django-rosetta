@@ -18,6 +18,7 @@
 {% endblock %}
 {% block main %}
     <h1>{% blocktrans  %}Translate into {{rosetta_i18n_lang_name}}{% endblocktrans %}</h1>
+    
     <ul class="object-tools">
         <li class="nobubble">{% trans "Display:" %}</li>
         <li {% ifequal rosetta_i18n_filter 'untranslated' %}class="active"{% endifequal %}><a href="?filter=untranslated">{% trans "Untranslated only" %}</a></li>
@@ -25,6 +26,16 @@
         <li {% ifequal rosetta_i18n_filter 'both' %}class="active"{% endifequal %}><a href="?filter=both">{% trans "Both" %}</a></li>
     </ul>
     <div id="changelist" class="module">
+        <div id="toolbar">
+        <form id="changelist-search" action="" method="post">
+            <div><!-- DIV needed for valid HTML -->
+                <label for="searchbar"><img src="/admin_media/img/admin/icon_searchbox.png" alt="{% trans "Search" %}" /></label>
+                <input type="text" size="40" name="q" value="{{q}}" id="searchbar" />
+                <input type="submit" name="search" value="{% trans "Go" %}" />
+            </div>
+        </form>
+        </div>
+        
         <form method="post" action="">
             <table>
                 <thead>

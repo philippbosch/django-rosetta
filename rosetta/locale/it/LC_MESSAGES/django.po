@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-01-16 18:20+0100\n"
+"POT-Creation-Date: 2008-01-30 20:43+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,94 +16,102 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: templates/rosetta/languages.html:2 templates/rosetta/pofile.html:13
+#: templates/rosetta/languages.html:3 templates/rosetta/pofile.html:13
 msgid "Home"
-msgstr ""
+msgstr "Inizio"
 
-#: templates/rosetta/languages.html:2
+#: templates/rosetta/languages.html:3
 msgid "Language selection"
-msgstr ""
-
-#: templates/rosetta/languages.html:12
-msgid "File"
-msgstr ""
+msgstr "Selezione della lingua"
 
 #: templates/rosetta/languages.html:13
-msgid "Messages"
-msgstr ""
+msgid "File"
+msgstr "File"
 
 #: templates/rosetta/languages.html:14
-msgid "Translated"
-msgstr ""
+msgid "Messages"
+msgstr "Messaggio"
 
 #: templates/rosetta/languages.html:15
-msgid "Obsolete"
-msgstr ""
+msgid "Translated"
+msgstr "Tradotto"
 
 #: templates/rosetta/languages.html:16
+msgid "Obsolete"
+msgstr "Obsoleto"
+
+#: templates/rosetta/languages.html:17
 msgid "Progress"
-msgstr ""
+msgstr "Progressione"
 
 #: templates/rosetta/pofile.html:7
 msgid "Pick another file"
-msgstr ""
+msgstr "Scegliere un altro file"
 
 #: templates/rosetta/pofile.html:8
 msgid "Download this catalog"
-msgstr ""
+msgstr "Scaricare il catalogo"
 
 #: templates/rosetta/pofile.html:16
 msgid "Progress: %(percent_translated)s%"
-msgstr ""
+msgstr "Progressione: %(percent_translated)s%"
 
 #: templates/rosetta/pofile.html:17
 msgid "File is read-only: download the file when done editing!"
-msgstr ""
+msgstr "file in solo lettura: scaricare il file alla fine dell'edizione!"
 
 #: templates/rosetta/pofile.html:20
 #, python-format
 msgid "Translate into %(rosetta_i18n_lang_name)s"
-msgstr ""
-
-#: templates/rosetta/pofile.html:22
-msgid "Display:"
-msgstr ""
+msgstr "Tradurre verso il %(rosetta_i18n_lang_name)s"
 
 #: templates/rosetta/pofile.html:23
-msgid "Untranslated only"
-msgstr ""
+msgid "Display:"
+msgstr "Mostra:"
 
 #: templates/rosetta/pofile.html:24
-msgid "Translated only"
-msgstr ""
+msgid "Untranslated only"
+msgstr "Solo non tradotti"
 
 #: templates/rosetta/pofile.html:25
+msgid "Translated only"
+msgstr "Solo tradotti"
+
+#: templates/rosetta/pofile.html:26
 msgid "Both"
-msgstr ""
+msgstr "Entrambi"
 
 #: templates/rosetta/pofile.html:32
-msgid "English"
-msgstr ""
+msgid "Search"
+msgstr "Cercare"
 
 #: templates/rosetta/pofile.html:34
+msgid "Go"
+msgstr "Via"
+
+#: templates/rosetta/pofile.html:43
+msgid "English"
+msgstr "Inglese"
+
+#: templates/rosetta/pofile.html:45
 msgid "Occurrences(s)"
-msgstr ""
+msgstr "Occorrenze"
 
-#: templates/rosetta/pofile.html:61
+#: templates/rosetta/pofile.html:72
 msgid "Save and translate next block"
-msgstr ""
-
-#: templates/rosetta/pofile.html:65
-msgid "Skip to page:"
-msgstr ""
-
-#: templates/rosetta/pofile.html:74
-msgid "Displaying:"
-msgstr ""
+msgstr "Salvare e tradurre il prossimo blocco"
 
 #: templates/rosetta/pofile.html:76
+msgid "Skip to page:"
+msgstr "Passare alla pagina:"
+
+#: templates/rosetta/pofile.html:85
+msgid "Displaying:"
+msgstr "Mostrato:"
+
+#: templates/rosetta/pofile.html:87
 #, python-format
 msgid "%(hits)s/%(message_number)s message"
 msgid_plural "%(hits)s/%(message_number)s messages"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(hits)s/%(message_number)s messaggio"
+msgstr[1] "%(hits)s/%(message_number)s messaggi"

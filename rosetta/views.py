@@ -63,12 +63,17 @@ def home(request):
         rosetta_i18n_lang_name = request.session.get('rosetta_i18n_lang_name')
         rosetta_i18n_lang_code = request.session.get('rosetta_i18n_lang_code')
         
-        if rosetta_i18n_filter == 'both':
-            paginator = ObjectPaginator(rosetta_i18n_pofile, 10)
-        elif rosetta_i18n_filter == 'untranslated':
-            paginator = ObjectPaginator(rosetta_i18n_pofile.untranslated_entries(), 10)
-        elif rosetta_i18n_filter == 'translated':
-            paginator = ObjectPaginator(rosetta_i18n_pofile.translated_entries(), 10)
+        if 'search' in request.POST and 'q' in request.POST and request.POST.get('q','').strip():
+            q=request.POST.get('q').strip()
+            rx=re.compile(q, re.IGNORECASE)
+            paginator = ObjectPaginator([e for e in rosetta_i18n_pofile if rx.search(e.msgstr+e.msgid+''.join([o[0] for o in e.occurrences]))], 10)
+        else:
+            if rosetta_i18n_filter == 'both':
+                paginator = ObjectPaginator(rosetta_i18n_pofile, 10)
+            elif rosetta_i18n_filter == 'untranslated':
+                paginator = ObjectPaginator(rosetta_i18n_pofile.untranslated_entries(), 10)
+            elif rosetta_i18n_filter == 'translated':
+                paginator = ObjectPaginator(rosetta_i18n_pofile.translated_entries(), 10)
         
         if 'page' in request.GET and int(request.GET.get('page')) < paginator.pages:
             page = int(request.GET.get('page'))
