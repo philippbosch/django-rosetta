@@ -54,12 +54,12 @@
                                 <span class="part">{{message.msgid_plural|format_message|linebreaksbr}}</span>
                             </td>
                             <td class="translation">
-                                <textarea rows="{{message.msgid|format_message|lines_count|add:1}}" name="m_{{message.id}}_0">{{message.msgstr_plural.0}}</textarea>
-                                <textarea rows="{{message.msgid_plural|format_message|lines_count|add:1}}" name="m_{{message.id}}_1">{{message.msgstr_plural.1}}</textarea>
+                                <textarea rows="{{message.msgid|format_message|lines_count}}" name="m_{{message.id}}_0">{{message.msgstr_plural.0}}</textarea>
+                                <textarea rows="{{message.msgid_plural|format_message|lines_count}}" name="m_{{message.id}}_1">{{message.msgstr_plural.1}}</textarea>
                             </td>
                         {% else %}
                             <td class="original">{{ message.msgid|format_message|linebreaksbr }}</td>
-                            <td class="translation"><textarea rows="{{message.msgid|format_message|lines_count|add:1}}" name="m_{{message.id}}">{{message.msgstr}}</textarea></td>
+                            <td class="translation"><textarea rows="{{message.msgid|format_message|lines_count}}" name="m_{{message.id}}">{{message.msgstr}}</textarea></td>
                         {% endif %}
                             <td class="location">{% for fn,lineno in message.occurrences %}<code>{{ fn }}:{{lineno}}</code> {% endfor %}</td>
                     </tr>

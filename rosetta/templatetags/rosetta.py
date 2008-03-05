@@ -12,7 +12,7 @@ def format_message(message):
 
 @register.filter
 def lines_count(message):
-    return message.count('\n')
+    return 1 + sum([len(line)/50 for line in message.split('\n')])
 
 @register.filter
 def mult(a,b):
