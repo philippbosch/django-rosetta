@@ -15,6 +15,24 @@ def home(request):
     Displays a list of messages to be translated
     """
     
+    
+    def fix_nls(in_,out_):
+        """Fixes submitted translations by filtering carraige returns and pairing
+        newlines at the begging and end of the translated string with the original
+        """
+        if 0 == len(in_) or 0 == len(out_):
+            return out_
+
+        if "\r" in out_ and "\r" not in in_:
+            out_=out_.replace("\r",'')
+
+        if "\n" == in_[0] and "\n" != out_[0]:
+            out_ = "\n" + out_
+        if "\n" == in_[-1] and "\n" != out_[-1]:
+            out_ = out_ + "\n"
+        return out_
+    
+    
     if 'rosetta_i18n_fn' in request.session:
         rosetta_i18n_fn=request.session.get('rosetta_i18n_fn')
         rosetta_i18n_pofile = request.session.get('rosetta_i18n_pofile')
@@ -39,11 +57,11 @@ def home(request):
                 if rx_plural.match(k):
                     id=int(rx_plural.match(k).groups()[0])
                     idx=str(rx_plural.match(k).groups()[1])
-                    rosetta_i18n_pofile[id].msgstr_plural[idx] = request.POST.get(k)
+                    rosetta_i18n_pofile[id].msgstr_plural[idx] = fix_nls(rosetta_i18n_pofile[id].msgid_plural[idx], request.POST.get(k))
                     file_change = True 
                 elif rx.match(k):
                     id=int(rx.match(k).groups()[0])
-                    rosetta_i18n_pofile[id].msgstr = request.POST.get(k)
+                    rosetta_i18n_pofile[id].msgstr = fix_nls(rosetta_i18n_pofile[id].msgid, request.POST.get(k))
                     file_change = True
                 if file_change and 'fuzzy' in rosetta_i18n_pofile[id].flags:
                     rosetta_i18n_pofile[id].flags.remove('fuzzy')
