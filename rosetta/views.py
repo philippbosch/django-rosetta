@@ -79,7 +79,21 @@ def home(request):
                     request.session['rosetta_i18n_write'] = False
                 
                 request.session['rosetta_i18n_pofile']=rosetta_i18n_pofile
-                return HttpResponseRedirect(reverse('rosetta-home') + ('?query='+request.REQUEST.get('query','') if 'query' in request.REQUEST else ''))
+                
+                # Retain query arguments
+                query_arg = ''
+                if 'query' in request.REQUEST:
+                    query_arg = '?query=%s' %request.REQUEST.get('query')
+                if 'page' in request.GET:
+                    if query_arg:
+                        query_arg = query_arg + '&'
+                    else:
+                        query_arg = '?'
+                    query_arg = query_arg + 'page=%d' % int(request.GET.get('page'))
+                    
+                    
+                return HttpResponseRedirect(reverse('rosetta-home') + query_arg)
+                
                 
         rosetta_i18n_lang_name = request.session.get('rosetta_i18n_lang_name')
         rosetta_i18n_lang_code = request.session.get('rosetta_i18n_lang_code')
