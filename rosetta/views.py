@@ -14,8 +14,7 @@ def home(request):
     """
     Displays a list of messages to be translated
     """
-    
-    
+        
     def fix_nls(in_,out_):
         """Fixes submitted translations by filtering carraige returns and pairing
         newlines at the begging and end of the translated string with the original
@@ -28,8 +27,12 @@ def home(request):
 
         if "\n" == in_[0] and "\n" != out_[0]:
             out_ = "\n" + out_
+        elif "\n" != in_[0] and "\n" == out_[0]:
+            out_ = out_.lstrip()
         if "\n" == in_[-1] and "\n" != out_[-1]:
             out_ = out_ + "\n"
+        elif "\n" != in_[-1] and "\n" == out_[-1]:
+            out_ = out_.rstrip()
         return out_
     
     
@@ -76,7 +79,7 @@ def home(request):
                     request.session['rosetta_i18n_write'] = False
                 
                 request.session['rosetta_i18n_pofile']=rosetta_i18n_pofile
-                return HttpResponseRedirect(reverse('rosetta-home'))
+                return HttpResponseRedirect(reverse('rosetta-home') + ('?query='+request.REQUEST.get('query','') if 'query' in request.REQUEST else ''))
                 
         rosetta_i18n_lang_name = request.session.get('rosetta_i18n_lang_name')
         rosetta_i18n_lang_code = request.session.get('rosetta_i18n_lang_code')

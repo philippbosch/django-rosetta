@@ -68,7 +68,9 @@
             </table>
             <div class="submit-row">
                 <p class="paginator">
-                    
+                    {% if query %}
+                        <input type="hidden" name="query" value="{{query}}"  />
+                    {% endif %}
                     <input type="submit" class="default" name="_next" value="{% trans "Save and translate next block" %}"/>
                     
                     
