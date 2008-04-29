@@ -519,6 +519,8 @@ class POFile(_BaseFile):
         50
         """
         total = len([e for e in self if not e.obsolete])
+        if total == 0:
+            return 100
         translated = len(self.translated_entries())
         return int((100.00 / float(total)) * translated)
 
