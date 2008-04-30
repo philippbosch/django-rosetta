@@ -517,6 +517,9 @@ class POFile(_BaseFile):
         >>> po = polib.pofile('tests/test_pofile_helpers.po')
         >>> po.percent_translated()
         50
+        >>> po = POFile()
+        >>> po.percent_translated()
+        100
         """
         total = len([e for e in self if not e.obsolete])
         if total == 0:
