@@ -9,7 +9,7 @@ from rosetta.polib import pofile
 import re,os
 
 
-@user_passes_test(lambda user:can_translate(user))
+@user_passes_test(lambda user:can_translate(user), '/admin/')
 def home(request):
     """
     Displays a list of messages to be translated
@@ -59,8 +59,8 @@ def home(request):
             for k in request.POST.keys():
                 if rx_plural.match(k):
                     id=int(rx_plural.match(k).groups()[0])
-                    idx=str(rx_plural.match(k).groups()[1])
-                    rosetta_i18n_pofile[id].msgstr_plural[idx] = fix_nls(rosetta_i18n_pofile[id].msgid_plural[idx], request.POST.get(k))
+                    idx=int(rx_plural.match(k).groups()[1])
+                    rosetta_i18n_pofile[id].msgstr_plural[str(idx)] = fix_nls(rosetta_i18n_pofile[id].msgid_plural[idx], request.POST.get(k))
                     file_change = True 
                 elif rx.match(k):
                     id=int(rx.match(k).groups()[0])
@@ -125,7 +125,7 @@ def home(request):
     else:
         return list_languages(request)
 
-@user_passes_test(lambda user:can_translate(user))
+@user_passes_test(lambda user:can_translate(user),'/admin/')
 def download_file(request):
     import zipfile, tempfile, os
     # original filename
@@ -168,16 +168,19 @@ def download_file(request):
         #return HttpResponse(e, mimetype="text/plain")
         
 
-@user_passes_test(lambda user:can_translate(user))
+@user_passes_test(lambda user:can_translate(user),'/admin/')
 def list_languages(request):
     """
     Lists the languages for the current project, the gettext catalog files
     that can be translated and their translation progress
     """
     languages = []
-    do_self = 'self' in request.GET
+    do_django = 'django' in request.GET
+    do_rosetta = 'rosetta' in request.GET
+    has_pos = False
     for language in settings.LANGUAGES:
-        pos = find_pos(language[0],do_self)
+        pos = find_pos(language[0],include_djangos=do_django,include_rosetta=do_rosetta)
+        has_pos = has_pos or len(pos)
         languages.append(
             (language[0], 
             language[1],
@@ -187,7 +190,7 @@ def list_languages(request):
     ADMIN_MEDIA_PREFIX = settings.ADMIN_MEDIA_PREFIX
     return render_to_response('rosetta/languages.html', locals())    
 
-@user_passes_test(lambda user:can_translate(user))
+@user_passes_test(lambda user:can_translate(user),'/admin/')
 def lang_sel(request,langid,idx):
     """
     Selects a file to be translated
@@ -195,12 +198,15 @@ def lang_sel(request,langid,idx):
     if langid not in [l[0] for l in settings.LANGUAGES]:
         raise Http404
     else:
-        do_self = 'self' in request.GET
-        file_ = find_pos(langid,do_self)[int(idx)]
+        
+        do_django = 'django' in request.GET
+        do_rosetta = 'rosetta' in request.GET
+        
+        file_ = find_pos(langid,include_djangos=do_django,include_rosetta=do_rosetta)[int(idx)]
+        
         request.session['rosetta_i18n_lang_code'] = langid
         request.session['rosetta_i18n_lang_name'] = [l[1] for l in settings.LANGUAGES if l[0] == langid][0]
         request.session['rosetta_i18n_fn'] = file_
-        request.session['rosetta_i18n_meta'] = do_self
         po = pofile(file_)
         for i in range(len(po)):
             po[i].id = i

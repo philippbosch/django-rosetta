@@ -1,7 +1,7 @@
 import re, string, sys, os
 from django.conf import settings
 
-def find_pos(lang, include_djangos = False):
+def find_pos(lang, include_djangos = False, include_rosetta = False):
     """
     scans a couple possible repositories of gettext catalogs for the given 
     language code
@@ -26,7 +26,7 @@ def find_pos(lang, include_djangos = False):
     
     # project/app/locale
     for appname in settings.INSTALLED_APPS:
-        if 'rosetta' == appname and include_djangos == False:
+        if 'rosetta' == appname and include_rosetta == False:
             continue
             
         p = appname.rfind('.')
