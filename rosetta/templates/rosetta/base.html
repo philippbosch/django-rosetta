@@ -16,13 +16,16 @@
         <div id="header">
             {% block header %}
             <div id="branding">
-                <h1 id="site-name"><a href="{% url rosetta-pick-file %}">Rosetta</a></h1>
+                <h1 id="site-name"><a href="{% url rosetta-pick-file %}">Rosetta</a> </h1>
             </div>
             {% endblock %}
         </div>
         <div class="breadcrumbs">{% block breadcumbs %}{% endblock %}</div>
         <div id="content" class="flex">
             {% block main %}{% endblock %}
+        </div>
+        <div id="footer" class="breadcumbs">
+            <a href="http://code.google.com/p/django-rosetta">Rosetta</a> <span class="version">{{version}}</span>
         </div>
     </div>
 </body>

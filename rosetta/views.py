@@ -6,6 +6,7 @@ from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
 from rosetta.poutil import find_pos
 from rosetta.polib import pofile
+from rosetta import get_version
 import re,os
 
 
@@ -35,7 +36,7 @@ def home(request):
             out_ = out_.rstrip()
         return out_
     
-    
+    version = get_version(True)
     if 'rosetta_i18n_fn' in request.session:
         rosetta_i18n_fn=request.session.get('rosetta_i18n_fn')
         rosetta_i18n_pofile = request.session.get('rosetta_i18n_pofile')
@@ -188,6 +189,7 @@ def list_languages(request):
             )
         )
     ADMIN_MEDIA_PREFIX = settings.ADMIN_MEDIA_PREFIX
+    version = get_version(True)
     return render_to_response('rosetta/languages.html', locals())    
 
 @user_passes_test(lambda user:can_translate(user),'/admin/')
