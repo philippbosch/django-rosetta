@@ -4,10 +4,11 @@ from django.core.paginator import ObjectPaginator, InvalidPage
 from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
-from rosetta.poutil import find_pos
-from rosetta.polib import pofile
 from rosetta import get_version
-import re,os
+from rosetta.polib import pofile
+from rosetta.poutil import find_pos
+from warnings import filterwarnings
+import re, os
 
 
 @user_passes_test(lambda user:can_translate(user), '/admin/')
@@ -98,6 +99,9 @@ def home(request):
                 
         rosetta_i18n_lang_name = request.session.get('rosetta_i18n_lang_name')
         rosetta_i18n_lang_code = request.session.get('rosetta_i18n_lang_code')
+        
+        # Filter the deprectated paginator warning.
+        filterwarnings("ignore")
         
         if 'query' in request.REQUEST and request.REQUEST.get('query','').strip():
             query=request.REQUEST.get('query').strip()
