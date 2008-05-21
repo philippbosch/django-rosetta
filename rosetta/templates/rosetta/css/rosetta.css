@@ -1,5 +1,6 @@
 #user-tools p span { margin-left:2em; }
 table{width:100%;}
+td.translation label {font-size: 95%;}
 td.translation textarea, td.original { font-size:110%;}
 td.translation,td.original {width:40%;}
 td.translation textarea{ width:98.5%; min-height:25px; margin:2px 0; }

@@ -54,8 +54,10 @@
                                 <span class="part">{{message.msgid_plural|format_message|linebreaksbr}}</span>
                             </td>
                             <td class="translation">
-                                <textarea rows="{{message.msgid|format_message|lines_count}}" name="m_{{message.id}}_0">{{message.msgstr_plural.0}}</textarea>
-                                <textarea rows="{{message.msgid_plural|format_message|lines_count}}" name="m_{{message.id}}_1">{{message.msgstr_plural.1}}</textarea>
+                                {% for k, msgstr in message.msgstr_plural.items|dictsort:"0"  %}
+                                    <label for="m_{{message.id}}_{{k}}">{{k}}:</label>
+                                    <textarea rows="{{message.msgid|format_message|lines_count}}" id="m_{{message.id}}_{{k}}" name="m_{{message.id}}_{{k}}">{{msgstr}}</textarea>
+                                {% endfor %}
                             </td>
                         {% else %}
                             <td class="original">{{ message.msgid|format_message|linebreaksbr }}</td>
