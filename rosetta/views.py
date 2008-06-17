@@ -76,6 +76,9 @@ def home(request):
             if file_change and rosetta_i18n_write:
                 try:
                     rosetta_i18n_pofile.metadata['Last-Translator'] = str("%s %s <%s>" %(request.user.first_name,request.user.last_name,request.user.email))
+                except UnicodeDecodeError:
+                    pass
+                try:
                     rosetta_i18n_pofile.save()
                     rosetta_i18n_pofile.save_as_mofile(rosetta_i18n_fn.replace('.po','.mo'))
                 except:
