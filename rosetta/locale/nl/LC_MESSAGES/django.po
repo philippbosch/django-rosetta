@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: rosetta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-05 17:06+0200\n"
+"POT-Creation-Date: 2008-06-17 10:48+0200\n"
 "PO-Revision-Date: 2008-06-05 17:06+0200\n"
 "Last-Translator: Joost Cassee <cassee@gmail.com>\n"
 "Language-Team: Joost Cassee <cassee@gmail.com>\n"
@@ -49,12 +49,21 @@ msgid "Nothing to translatate!"
 msgstr "Niets te vertalen!"
 
 #: templates/rosetta/languages.html:37
-msgid "You haven't specified any languages in your settings file, or haven't yet generated a batch of translation catalogs."
-msgstr "U heeft geen talen gespecificeerd in het bestand settings.py of nog geen catalogus gegenereerd."
+msgid ""
+"You haven't specified any languages in your settings file, or haven't yet "
+"generated a batch of translation catalogs."
+msgstr ""
+"U heeft geen talen gespecificeerd in het bestand settings.py of nog geen "
+"catalogus gegenereerd."
 
 #: templates/rosetta/languages.html:38
-msgid "Please refer to <a href='http://www.djangoproject.com/documentation/i18n/'>Django's I18N documentation</a> for a guide on how to set up internationalization for your project."
-msgstr "Zie <a href='http://www.djangoproject.com/documentation/i18n/'>Django's I18N documentatie</a> (Engels) voor meer informatie over internationalisatie."
+msgid ""
+"Please refer to <a href='http://www.djangoproject.com/documentation/"
+"i18n/'>Django's I18N documentation</a> for a guide on how to set up "
+"internationalization for your project."
+msgstr ""
+"Zie <a href='http://www.djangoproject.com/documentation/i18n/'>Django's I18N "
+"documentatie</a> (Engels) voor meer informatie over internationalisatie."
 
 #: templates/rosetta/pofile.html:7
 msgid "Pick another file"
@@ -70,7 +79,9 @@ msgstr "Voortgang: %(percent_translated)s%"
 
 #: templates/rosetta/pofile.html:17
 msgid "File is read-only: download the file when done editing!"
-msgstr "Dit is bestand is alleen-lezen; download dit bestand wanneer u klaar bent met bewerken!"
+msgstr ""
+"Dit is bestand is alleen-lezen; download dit bestand wanneer u klaar bent "
+"met bewerken!"
 
 #: templates/rosetta/pofile.html:20
 #, python-format

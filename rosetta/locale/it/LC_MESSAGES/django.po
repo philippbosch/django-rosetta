@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-17 18:17+0200\n"
+"POT-Creation-Date: 2008-06-17 10:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Marco Bonetti <mbi@mbi.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -118,19 +118,19 @@ msgstr "Inglese"
 msgid "Occurrences(s)"
 msgstr "Occorrenze"
 
-#: templates/rosetta/pofile.html:74
+#: templates/rosetta/pofile.html:76
 msgid "Save and translate next block"
 msgstr "Salvare e tradurre il prossimo blocco"
 
-#: templates/rosetta/pofile.html:78
+#: templates/rosetta/pofile.html:80
 msgid "Skip to page:"
 msgstr "Passare alla pagina:"
 
-#: templates/rosetta/pofile.html:87
+#: templates/rosetta/pofile.html:89
 msgid "Displaying:"
 msgstr "Mostrato:"
 
-#: templates/rosetta/pofile.html:89
+#: templates/rosetta/pofile.html:91
 #, python-format
 msgid "%(hits)s/%(message_number)s message"
 msgid_plural "%(hits)s/%(message_number)s messages"

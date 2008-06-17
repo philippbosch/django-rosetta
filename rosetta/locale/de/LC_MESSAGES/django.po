@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: rosetta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-17 18:17+0200\n"
-"PO-Revision-Date: 2008-01-29 18:25+0100\n"
-"Last-Translator: Patrick Lauber <patrick.lauber@divio.ch>\n"
+"POT-Creation-Date: 2008-06-17 10:48+0200\n"
+"PO-Revision-Date: 2008-06-16 10:11+0100\n"
+"Last-Translator: Martin Mahner <martin@mahner.org>\n"
 "Language-Team: patrick lauber <patrick.lauber@divio.ch>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,17 +44,19 @@ msgstr "Veraltet"
 
 #: templates/rosetta/languages.html:17
 msgid "Progress"
-msgstr "Vortschritt"
+msgstr "Fortschritt"
 
 #: templates/rosetta/languages.html:36
 msgid "Nothing to translatate!"
-msgstr ""
+msgstr "Nichts zu übersetzen!"
 
 #: templates/rosetta/languages.html:37
 msgid ""
 "You haven't specified any languages in your settings file, or haven't yet "
 "generated a batch of translation catalogs."
 msgstr ""
+"Sie haben keine Sprachen in der Einstellungsdatei definiert oder bis jetzt "
+"noch keine Übersetzungskataloge generiert."
 
 #: templates/rosetta/languages.html:38
 msgid ""
@@ -62,6 +64,9 @@ msgid ""
 "i18n/'>Django's I18N documentation</a> for a guide on how to set up "
 "internationalization for your project."
 msgstr ""
+"Unter <a href='http://www.djangoproject.com/documentation/i18n/'>Django's "
+"I18N documentation</a> finden Sie eine Anleitung, wie sie "
+"Internationalisierung in Ihrem Projekt einrichten."
 
 #: templates/rosetta/pofile.html:7
 msgid "Pick another file"
@@ -79,7 +84,7 @@ msgstr "Fortschritt: %(percent_translated)s%"
 msgid "File is read-only: download the file when done editing!"
 msgstr ""
 "Datei ist schreibgeschützt: Laden Sie die Datei herunter wenn sie mit dem "
-"editieren fertig sind!"
+"Editieren fertig sind!"
 
 #: templates/rosetta/pofile.html:20
 #, python-format
@@ -118,19 +123,19 @@ msgstr "Englisch"
 msgid "Occurrences(s)"
 msgstr "Gefunden in"
 
-#: templates/rosetta/pofile.html:74
+#: templates/rosetta/pofile.html:76
 msgid "Save and translate next block"
 msgstr "Speichern und nächsten Block übersetzen"
 
-#: templates/rosetta/pofile.html:78
+#: templates/rosetta/pofile.html:80
 msgid "Skip to page:"
 msgstr "Zur Seite:"
 
-#: templates/rosetta/pofile.html:87
+#: templates/rosetta/pofile.html:89
 msgid "Displaying:"
 msgstr "Anzeigen:"
 
-#: templates/rosetta/pofile.html:89
+#: templates/rosetta/pofile.html:91
 #, python-format
 msgid "%(hits)s/%(message_number)s message"
 msgid_plural "%(hits)s/%(message_number)s messages"
