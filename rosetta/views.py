@@ -4,12 +4,13 @@ from django.core.paginator import Paginator, InvalidPage
 from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
+from django.utils.encoding import smart_unicode
 from django.utils.translation import ugettext_lazy as _
-from rosetta import get_version
+from rosetta import get_version, MESSAGES_PER_PAGE
 from rosetta.polib import pofile
 from rosetta.poutil import find_pos, pagination_range
-from warnings import filterwarnings
 import re, os
+
 
 
 @user_passes_test(lambda user:can_translate(user), '/admin/')
@@ -103,21 +104,18 @@ def home(request):
                 
         rosetta_i18n_lang_name = _(request.session.get('rosetta_i18n_lang_name'))
         rosetta_i18n_lang_code = request.session.get('rosetta_i18n_lang_code')
-        
-        # Filter the deprectated paginator warning.
-        filterwarnings("ignore")
-        
+                
         if 'query' in request.REQUEST and request.REQUEST.get('query','').strip():
             query=request.REQUEST.get('query').strip()
             rx=re.compile(query, re.IGNORECASE)
-            paginator = Paginator([e for e in rosetta_i18n_pofile if rx.search(e.msgstr+e.msgid+''.join([o[0] for o in e.occurrences]))], 10)
+            paginator = Paginator([e for e in rosetta_i18n_pofile if rx.search(smart_unicode(e.msgstr)+smart_unicode(e.msgid)+u''.join([o[0] for o in e.occurrences]))], MESSAGES_PER_PAGE)
         else:
             if rosetta_i18n_filter == 'both':
-                paginator = Paginator(rosetta_i18n_pofile, 10)
+                paginator = Paginator(rosetta_i18n_pofile, MESSAGES_PER_PAGE)
             elif rosetta_i18n_filter == 'untranslated':
-                paginator = Paginator(rosetta_i18n_pofile.untranslated_entries(), 10)
+                paginator = Paginator(rosetta_i18n_pofile.untranslated_entries(), MESSAGES_PER_PAGE)
             elif rosetta_i18n_filter == 'translated':
-                paginator = Paginator(rosetta_i18n_pofile.translated_entries(), 10)
+                paginator = Paginator(rosetta_i18n_pofile.translated_entries(), MESSAGES_PER_PAGE)
         
         if 'page' in request.GET and int(request.GET.get('page')) <= paginator.num_pages and int(request.GET.get('page')) > 0:
             page = int(request.GET.get('page'))
