@@ -126,7 +126,7 @@ def home(request):
         messages = paginator.page(page).object_list
         needs_pagination = paginator.num_pages > 1
         if needs_pagination:
-            page_range = pagination_range(1,paginator.num_pages,page)
+            page_range = pagination_range(1, paginator.num_pages, page) if paginator.num_pages >= 10 else range(1,1+paginator.num_pages)
         ADMIN_MEDIA_PREFIX = settings.ADMIN_MEDIA_PREFIX
         
         return render_to_response('rosetta/pofile.html', locals())      
