@@ -20,7 +20,7 @@ def home(request):
     """
         
     def fix_nls(in_,out_):
-        """Fixes submitted translations by filtering carraige returns and pairing
+        """Fixes submitted translations by filtering carriage returns and pairing
         newlines at the begging and end of the translated string with the original
         """
         if 0 == len(in_) or 0 == len(out_):
@@ -124,7 +124,10 @@ def home(request):
         messages = paginator.page(page).object_list
         needs_pagination = paginator.num_pages > 1
         if needs_pagination:
-            page_range = pagination_range(1, paginator.num_pages, page) if paginator.num_pages >= 10 else range(1,1+paginator.num_pages)
+            if paginator.num_pages >= 10:
+                page_range = pagination_range(1, paginator.num_pages, page)
+            else:
+                page_range = range(1,1+paginator.num_pages)
         ADMIN_MEDIA_PREFIX = settings.ADMIN_MEDIA_PREFIX
         
         return render_to_response('rosetta/pofile.html', locals())      
