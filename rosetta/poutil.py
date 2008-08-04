@@ -48,3 +48,30 @@ def find_pos(lang, include_djangos = False, include_rosetta = False):
             if os.path.isfile(dirname+fn):
                 ret.append(dirname+fn)
     return ret
+
+def pagination_range(first,last,current):
+    r = []
+    
+    r.append(first)
+    if first + 1 < last: r.append(first+1)
+    
+    if current -2 > first and current -2 < last: r.append(current-2)
+    if current -1 > first and current -1 < last: r.append(current-1)
+    if current > first and current < last: r.append(current)
+    if current + 1 < last and current+1 > first: r.append(current+1)
+    if current + 2 < last and current+2 > first: r.append(current+2)
+    
+    if last-1 > first: r.append(last-1)
+    r.append(last)
+    
+    r = list(set(r))
+    r.sort()
+    prev = 10000
+    for e in r[:]:
+        if prev + 1 < e:
+            try:
+                r.insert(r.index(e), '...')
+            except ValueError:
+                pass
+        prev = e
+    return r

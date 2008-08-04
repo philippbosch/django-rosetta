@@ -79,16 +79,20 @@
                     {% if needs_pagination %}
                     {% trans "Skip to page:" %}
                     {% for i in page_range %}
+                        {% ifequal i '...' %}
+                        <span class="space">{{ i }}</span>
+                        {% else %}
                         {% ifequal i page %}
-                            <span class="this-page">{{i|add:1}}</span>
+                            <span class="this-page">{{i}}</span>
                         {% else %}    
-                            <a href="?page={{i}}{% if query %}&amp;query={{query}}{% endif %}">{{i|add:1}}</a>
+                            <a href="?page={{i}}{% if query %}&amp;query={{query}}{% endif %}">{{i}}</a>
+                        {% endifequal %}
                         {% endifequal %}
                     {% endfor %}
                     {% else %}
                     {% trans "Displaying:" %}
                     {% endif %}
-                    <strong>{% blocktrans count rosetta_i18n_pofile|length as message_number and paginator.hits as hits %}{{hits}}/{{message_number}} message{% plural %}{{hits}}/{{message_number}} messages{% endblocktrans %}</strong>
+                    <strong>{% blocktrans count rosetta_i18n_pofile|length as message_number and paginator.object_list|length as hits %}{{hits}}/{{message_number}} message{% plural %}{{hits}}/{{message_number}} messages{% endblocktrans %}</strong>
 
                     
                 </p>

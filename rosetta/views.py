@@ -1,13 +1,13 @@
 from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test
-from django.core.paginator import ObjectPaginator, InvalidPage
+from django.core.paginator import Paginator, InvalidPage
 from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
 from django.utils.translation import ugettext_lazy as _
 from rosetta import get_version
 from rosetta.polib import pofile
-from rosetta.poutil import find_pos
+from rosetta.poutil import find_pos, pagination_range
 from warnings import filterwarnings
 import re, os
 
@@ -110,23 +110,23 @@ def home(request):
         if 'query' in request.REQUEST and request.REQUEST.get('query','').strip():
             query=request.REQUEST.get('query').strip()
             rx=re.compile(query, re.IGNORECASE)
-            paginator = ObjectPaginator([e for e in rosetta_i18n_pofile if rx.search(e.msgstr+e.msgid+''.join([o[0] for o in e.occurrences]))], 10)
+            paginator = Paginator([e for e in rosetta_i18n_pofile if rx.search(e.msgstr+e.msgid+''.join([o[0] for o in e.occurrences]))], 10)
         else:
             if rosetta_i18n_filter == 'both':
-                paginator = ObjectPaginator(rosetta_i18n_pofile, 10)
+                paginator = Paginator(rosetta_i18n_pofile, 10)
             elif rosetta_i18n_filter == 'untranslated':
-                paginator = ObjectPaginator(rosetta_i18n_pofile.untranslated_entries(), 10)
+                paginator = Paginator(rosetta_i18n_pofile.untranslated_entries(), 10)
             elif rosetta_i18n_filter == 'translated':
-                paginator = ObjectPaginator(rosetta_i18n_pofile.translated_entries(), 10)
+                paginator = Paginator(rosetta_i18n_pofile.translated_entries(), 10)
         
-        if 'page' in request.GET and int(request.GET.get('page')) < paginator.pages:
+        if 'page' in request.GET and int(request.GET.get('page')) <= paginator.num_pages and int(request.GET.get('page')) > 0:
             page = int(request.GET.get('page'))
         else:
-            page = 0
-        messages = paginator.get_page(page)
-        needs_pagination = paginator.pages > 1
+            page = 1
+        messages = paginator.page(page).object_list
+        needs_pagination = paginator.num_pages > 1
         if needs_pagination:
-            page_range = range(paginator.pages)
+            page_range = pagination_range(1,paginator.num_pages,page)
         ADMIN_MEDIA_PREFIX = settings.ADMIN_MEDIA_PREFIX
         
         return render_to_response('rosetta/pofile.html', locals())      

@@ -5,11 +5,12 @@ td.translation textarea, td.original { font-size:110%;}
 td.translation,td.original {width:40%;}
 td.translation textarea{ width:98.5%; min-height:25px; margin:2px 0; }
 .plural span {display:block; height:40px; margin:2px 0;}
-td.location code { font-size:95%; margin-right:1em;}
+td.location code { font-size:95%; margin-right;}
 .submit-row {margin-bottom:0;}
 li.nobubble,li.nobubble:hover { background-image:none;}
 .object-tools li.active, .object-tools li.active a { color:yellow;}
 p.paginator input { float:right;}
+p.paginator span.space { margin: 0 0.5em;}
 .paginator {text-align:left; border:none; background:transparent; }
 .paginator strong { margin-left:1em;}
 th.r,td.r {text-align:right;}
