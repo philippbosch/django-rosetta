@@ -12,8 +12,6 @@ from rosetta.poutil import find_pos, pagination_range
 import re, os
 
 
-
-@user_passes_test(lambda user:can_translate(user), '/admin/')
 def home(request):
     """
     Displays a list of messages to be translated
@@ -134,8 +132,9 @@ def home(request):
         
     else:
         return list_languages(request)
+home=user_passes_test(lambda user:can_translate(user),'/admin/')(home)
 
-@user_passes_test(lambda user:can_translate(user),'/admin/')
+
 def download_file(request):
     import zipfile, tempfile, os
     # original filename
@@ -176,9 +175,10 @@ def download_file(request):
     except Exception, e:
         return HttpResponseRedirect(reverse('rosetta-home'))
         #return HttpResponse(e, mimetype="text/plain")
+download_file=user_passes_test(lambda user:can_translate(user),'/admin/')(download_file)
         
 
-@user_passes_test(lambda user:can_translate(user),'/admin/')
+
 def list_languages(request):
     """
     Lists the languages for the current project, the gettext catalog files
@@ -200,8 +200,8 @@ def list_languages(request):
     ADMIN_MEDIA_PREFIX = settings.ADMIN_MEDIA_PREFIX
     version = get_version(True)
     return render_to_response('rosetta/languages.html', locals())    
+list_languages=user_passes_test(lambda user:can_translate(user),'/admin/')(list_languages)
 
-@user_passes_test(lambda user:can_translate(user),'/admin/')
 def lang_sel(request,langid,idx):
     """
     Selects a file to be translated
@@ -230,6 +230,7 @@ def lang_sel(request,langid,idx):
             request.session['rosetta_i18n_write'] = False
             
         return HttpResponseRedirect(reverse('rosetta-home'))
+lang_sel=user_passes_test(lambda user:can_translate(user),'/admin/')(lang_sel)
 
 def can_translate(user):
     if not user.is_authenticated():
