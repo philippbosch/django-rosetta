@@ -6,6 +6,7 @@ from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
 from django.utils.encoding import smart_unicode
 from django.utils.translation import ugettext_lazy as _
+from django.views.decorators.cache import never_cache
 from rosetta import get_version, MESSAGES_PER_PAGE
 from rosetta.polib import pofile
 from rosetta.poutil import find_pos, pagination_range
@@ -133,6 +134,7 @@ def home(request):
     else:
         return list_languages(request)
 home=user_passes_test(lambda user:can_translate(user),'/admin/')(home)
+home=never_cache(home)
 
 
 def download_file(request):
@@ -176,6 +178,7 @@ def download_file(request):
         return HttpResponseRedirect(reverse('rosetta-home'))
         #return HttpResponse(e, mimetype="text/plain")
 download_file=user_passes_test(lambda user:can_translate(user),'/admin/')(download_file)
+download_file=never_cache(download_file)
         
 
 
@@ -201,6 +204,7 @@ def list_languages(request):
     version = get_version(True)
     return render_to_response('rosetta/languages.html', locals())    
 list_languages=user_passes_test(lambda user:can_translate(user),'/admin/')(list_languages)
+list_languages=never_cache(list_languages)
 
 def lang_sel(request,langid,idx):
     """
@@ -231,6 +235,7 @@ def lang_sel(request,langid,idx):
             
         return HttpResponseRedirect(reverse('rosetta-home'))
 lang_sel=user_passes_test(lambda user:can_translate(user),'/admin/')(lang_sel)
+lang_sel=never_cache(lang_sel)
 
 def can_translate(user):
     if not user.is_authenticated():
