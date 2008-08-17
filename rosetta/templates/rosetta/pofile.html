@@ -25,7 +25,7 @@
         <li {% ifequal rosetta_i18n_filter 'translated' %}class="active"{% endifequal %}><a href="?filter=translated">{% trans "Translated only" %}</a></li>
         <li {% ifequal rosetta_i18n_filter 'both' %}class="active"{% endifequal %}><a href="?filter=both">{% trans "Both" %}</a></li>
     </ul>
-    <div id="changelist" class="module">
+    <div id="changelist" class="module{% if rosetta_i18n_lang_bidi %} rtl{% endif %}">
         <div id="toolbar">
         <form id="changelist-search" action="" method="post">
             <div><!-- DIV needed for valid HTML -->
