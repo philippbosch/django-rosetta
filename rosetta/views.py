@@ -43,6 +43,7 @@ def home(request):
         rosetta_i18n_fn=request.session.get('rosetta_i18n_fn')
         rosetta_i18n_pofile = request.session.get('rosetta_i18n_pofile')
         rosetta_i18n_lang_code = request.session['rosetta_i18n_lang_code']
+        rosetta_i18n_lang_bidi = (rosetta_i18n_lang_code in settings.LANGUAGES_BIDI)
         rosetta_i18n_write = request.session.get('rosetta_i18n_write', True)
         
         if 'filter' in request.GET:
