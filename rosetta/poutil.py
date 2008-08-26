@@ -1,6 +1,10 @@
 import re, string, sys, os
 from django.conf import settings
-
+try:
+    set
+except NameError:
+    from sets import Set as set   # Python 2.3 fallback
+    
 def find_pos(lang, include_djangos = False, include_rosetta = False):
     """
     scans a couple possible repositories of gettext catalogs for the given 
@@ -40,14 +44,14 @@ def find_pos(lang, include_djangos = False, include_rosetta = False):
         if os.path.isdir(apppath):
             paths.append(apppath)
             
-    ret = []
+    ret = set()
     rx=re.compile(r'(\w+)/../\1')
     for path in paths:
         dirname = rx.sub(r'\1', '%s/%s/LC_MESSAGES/' %(path,lang))
         for fn in ('django.po','djangojs.po',):
             if os.path.isfile(dirname+fn):
-                ret.append(dirname+fn)
-    return ret
+                ret.add(dirname+fn)
+    return list(ret)
 
 def pagination_range(first,last,current):
     r = []
