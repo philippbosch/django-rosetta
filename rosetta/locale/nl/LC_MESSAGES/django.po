@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: rosetta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-17 10:48+0200\n"
+"POT-Creation-Date: 2008-09-04 10:30+0200\n"
 "PO-Revision-Date: 2008-06-05 17:06+0200\n"
 "Last-Translator: Joost Cassee <cassee@gmail.com>\n"
 "Language-Team: Joost Cassee <cassee@gmail.com>\n"
@@ -120,19 +120,26 @@ msgstr "Engels"
 msgid "Occurrences(s)"
 msgstr "Gevonden in"
 
-#: templates/rosetta/pofile.html:76
+#: templates/rosetta/pofile.html:71
+#, python-format
+msgid "%(more_count)s more"
+msgid_plural "%(more_count)s more"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/rosetta/pofile.html:83
 msgid "Save and translate next block"
 msgstr "Opslaan en volgende blok vertalen"
 
-#: templates/rosetta/pofile.html:80
+#: templates/rosetta/pofile.html:87
 msgid "Skip to page:"
 msgstr "Snel naar pagina:"
 
-#: templates/rosetta/pofile.html:89
+#: templates/rosetta/pofile.html:100
 msgid "Displaying:"
 msgstr "Tonen:"
 
-#: templates/rosetta/pofile.html:91
+#: templates/rosetta/pofile.html:102
 #, python-format
 msgid "%(hits)s/%(message_number)s message"
 msgid_plural "%(hits)s/%(message_number)s messages"

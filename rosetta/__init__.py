@@ -1,4 +1,4 @@
-VERSION = (0, 4, 'pre2')
+VERSION = (0, 4, 'RC1')
 
 def get_version(svn=False):
     "Returns the version as a human-format string."

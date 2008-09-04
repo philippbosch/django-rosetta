@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-13 23:14+0300\n"
+"POT-Creation-Date: 2008-09-04 10:30+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nazar Leush <nazar@pleso.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,101 +15,125 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: templates/rosetta/languages.html.py:3
-#: templates/rosetta/pofile.html.py:13
+#: templates/rosetta/languages.html:3 templates/rosetta/pofile.html:13
 msgid "Home"
 msgstr "Начало"
 
-#: templates/rosetta/languages.html.py:3
+#: templates/rosetta/languages.html:3
 msgid "Language selection"
 msgstr "Выбор языка"
 
-#: templates/rosetta/languages.html.py:13
+#: templates/rosetta/languages.html:13
 msgid "File"
 msgstr "Файл"
 
-#: templates/rosetta/languages.html.py:14
+#: templates/rosetta/languages.html:14
 msgid "Messages"
 msgstr "Сообщений"
 
-#: templates/rosetta/languages.html.py:15
+#: templates/rosetta/languages.html:15
 msgid "Translated"
 msgstr "С переводом"
 
-#: templates/rosetta/languages.html.py:16
+#: templates/rosetta/languages.html:16
 msgid "Obsolete"
 msgstr "Устаревших"
 
-#: templates/rosetta/languages.html.py:17
+#: templates/rosetta/languages.html:17
 msgid "Progress"
 msgstr "Обработано"
 
-#: templates/rosetta/pofile.html.py:7
+#: templates/rosetta/languages.html:36
+msgid "Nothing to translatate!"
+msgstr ""
+
+#: templates/rosetta/languages.html:37
+msgid ""
+"You haven't specified any languages in your settings file, or haven't yet "
+"generated a batch of translation catalogs."
+msgstr ""
+
+#: templates/rosetta/languages.html:38
+msgid ""
+"Please refer to <a href='http://www.djangoproject.com/documentation/"
+"i18n/'>Django's I18N documentation</a> for a guide on how to set up "
+"internationalization for your project."
+msgstr ""
+
+#: templates/rosetta/pofile.html:7
 msgid "Pick another file"
 msgstr "Выбрать другой файл"
 
-#: templates/rosetta/pofile.html.py:8
+#: templates/rosetta/pofile.html:8
 msgid "Download this catalog"
 msgstr "Скачать этот каталог"
 
-#: templates/rosetta/pofile.html.py:16
+#: templates/rosetta/pofile.html:16
 msgid "Progress: %(percent_translated)s%"
 msgstr "Обработано: %(percent_translated)s%"
 
-#: templates/rosetta/pofile.html.py:17
+#: templates/rosetta/pofile.html:17
 msgid "File is read-only: download the file when done editing!"
-msgstr "Файл только для чтения: загрузите файл после завершения редактирования!"
+msgstr ""
+"Файл только для чтения: загрузите файл после завершения редактирования!"
 
-#: templates/rosetta/pofile.html.py:20
+#: templates/rosetta/pofile.html:20
 #, python-format
 msgid "Translate into %(rosetta_i18n_lang_name)s"
 msgstr "Перевод на %(rosetta_i18n_lang_name)s"
 
-#: templates/rosetta/pofile.html.py:23
+#: templates/rosetta/pofile.html:23
 msgid "Display:"
 msgstr "Отображать:"
 
-#: templates/rosetta/pofile.html.py:24
+#: templates/rosetta/pofile.html:24
 msgid "Untranslated only"
 msgstr "Только без перевода"
 
-#: templates/rosetta/pofile.html.py:25
+#: templates/rosetta/pofile.html:25
 msgid "Translated only"
 msgstr "Только с переводом"
 
-#: templates/rosetta/pofile.html.py:26
+#: templates/rosetta/pofile.html:26
 msgid "Both"
 msgstr "Все"
 
-#: templates/rosetta/pofile.html.py:32
+#: templates/rosetta/pofile.html:32
 msgid "Search"
 msgstr "Поиск"
 
-#: templates/rosetta/pofile.html.py:34
+#: templates/rosetta/pofile.html:34
 msgid "Go"
 msgstr "Вперёд"
 
-#: templates/rosetta/pofile.html.py:43
+#: templates/rosetta/pofile.html:43
 msgid "English"
 msgstr "Английский"
 
-#: templates/rosetta/pofile.html.py:45
+#: templates/rosetta/pofile.html:45
 msgid "Occurrences(s)"
 msgstr "Встречается в"
 
-#: templates/rosetta/pofile.html.py:72
+#: templates/rosetta/pofile.html:71
+#, python-format
+msgid "%(more_count)s more"
+msgid_plural "%(more_count)s more"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/rosetta/pofile.html:83
 msgid "Save and translate next block"
 msgstr "Сохранить и перевести следующий блок"
 
-#: templates/rosetta/pofile.html.py:76
+#: templates/rosetta/pofile.html:87
 msgid "Skip to page:"
 msgstr "Перейти к странице:"
 
-#: templates/rosetta/pofile.html.py:85
+#: templates/rosetta/pofile.html:100
 msgid "Displaying:"
 msgstr "Отображение:"
 
-#: templates/rosetta/pofile.html.py:87
+#: templates/rosetta/pofile.html:102
 #, python-format
 msgid "%(hits)s/%(message_number)s message"
 msgid_plural "%(hits)s/%(message_number)s messages"
