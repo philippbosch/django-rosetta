@@ -10,7 +10,3 @@ def get_version(svn=False):
         if svn_rev:
             v = '%s-%s' % (v, svn_rev)
     return v
-
-# Number of messages to display per page.
-MESSAGES_PER_PAGE = 10
-

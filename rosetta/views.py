@@ -7,10 +7,10 @@ from django.shortcuts import render_to_response
 from django.utils.encoding import smart_unicode
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.cache import never_cache
-from rosetta import get_version, MESSAGES_PER_PAGE
 from rosetta.polib import pofile
 from rosetta.poutil import find_pos, pagination_range
-import re, os
+from rosetta import settings as rosetta_settings
+import re, os, rosetta
 
 
 def home(request):
@@ -38,7 +38,7 @@ def home(request):
             out_ = out_.rstrip()
         return out_
     
-    version = get_version(True)
+    version = rosetta.get_version(True)
     if 'rosetta_i18n_fn' in request.session:
         rosetta_i18n_fn=request.session.get('rosetta_i18n_fn')
         rosetta_i18n_pofile = request.session.get('rosetta_i18n_pofile')
@@ -108,14 +108,14 @@ def home(request):
         if 'query' in request.REQUEST and request.REQUEST.get('query','').strip():
             query=request.REQUEST.get('query').strip()
             rx=re.compile(query, re.IGNORECASE)
-            paginator = Paginator([e for e in rosetta_i18n_pofile if rx.search(smart_unicode(e.msgstr)+smart_unicode(e.msgid)+u''.join([o[0] for o in e.occurrences]))], MESSAGES_PER_PAGE)
+            paginator = Paginator([e for e in rosetta_i18n_pofile if rx.search(smart_unicode(e.msgstr)+smart_unicode(e.msgid)+u''.join([o[0] for o in e.occurrences]))], rosetta_settings.MESSAGES_PER_PAGE)
         else:
             if rosetta_i18n_filter == 'both':
-                paginator = Paginator(rosetta_i18n_pofile, MESSAGES_PER_PAGE)
+                paginator = Paginator(rosetta_i18n_pofile, rosetta_settings.MESSAGES_PER_PAGE)
             elif rosetta_i18n_filter == 'untranslated':
-                paginator = Paginator(rosetta_i18n_pofile.untranslated_entries(), MESSAGES_PER_PAGE)
+                paginator = Paginator(rosetta_i18n_pofile.untranslated_entries(), rosetta_settings.MESSAGES_PER_PAGE)
             elif rosetta_i18n_filter == 'translated':
-                paginator = Paginator(rosetta_i18n_pofile.translated_entries(), MESSAGES_PER_PAGE)
+                paginator = Paginator(rosetta_i18n_pofile.translated_entries(), rosetta_settings.MESSAGES_PER_PAGE)
         
         if 'page' in request.GET and int(request.GET.get('page')) <= paginator.num_pages and int(request.GET.get('page')) > 0:
             page = int(request.GET.get('page'))
@@ -129,7 +129,7 @@ def home(request):
             else:
                 page_range = range(1,1+paginator.num_pages)
         ADMIN_MEDIA_PREFIX = settings.ADMIN_MEDIA_PREFIX
-        
+        ENABLE_TRANSLATION_SUGGESTIONS = rosetta_settings.ENABLE_TRANSLATION_SUGGESTIONS
         return render_to_response('rosetta/pofile.html', locals())      
         
     else:
@@ -202,7 +202,7 @@ def list_languages(request):
             )
         )
     ADMIN_MEDIA_PREFIX = settings.ADMIN_MEDIA_PREFIX
-    version = get_version(True)
+    version = rosetta.get_version(True)
     return render_to_response('rosetta/languages.html', locals())    
 list_languages=user_passes_test(lambda user:can_translate(user),'/admin/')(list_languages)
 list_languages=never_cache(list_languages)
