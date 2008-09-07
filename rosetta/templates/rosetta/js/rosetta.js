@@ -11,7 +11,8 @@ google.setOnLoadCallback(function() {
         a.attr('class','suggesting').html('...');
         google.language.translate(orig, "en", '{{rosetta_i18n_lang_code}}', function(result) {
             if (!result.error) {
-                trans.val(unescape(result.translation));
+                var translation=unescape(result.translation).replace(/&#39;/g,'\'').replace(/&quot;/g,'"').replace(/%\s+(\([^\)]+\))\s*s/g,' %$1s ');
+                trans.val(translation);
                 a.hide();
             } else {
                 a.attr('class','suggest').html(str);
