@@ -221,7 +221,7 @@ def lang_sel(request,langid,idx):
         file_ = find_pos(langid,include_djangos=do_django,include_rosetta=do_rosetta)[int(idx)]
         
         request.session['rosetta_i18n_lang_code'] = langid
-        request.session['rosetta_i18n_lang_name'] = [l[1] for l in settings.LANGUAGES if l[0] == langid][0]
+        request.session['rosetta_i18n_lang_name'] = unicode([l[1] for l in settings.LANGUAGES if l[0] == langid][0])
         request.session['rosetta_i18n_fn'] = file_
         po = pofile(file_)
         for i in range(len(po)):
