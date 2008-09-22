@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Rosetta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-12 11:59+0200\n"
+"POT-Creation-Date: 2008-09-22 10:18+0200\n"
 "PO-Revision-Date: 2008-09-12 12:16\n"
 "Last-Translator: <tomasz@napierala.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,16 +45,26 @@ msgid "Progress"
 msgstr "Postęp"
 
 #: templates/rosetta/languages.html:37
-msgid "Nothing to translatate!"
+msgid "Nothing to translate!"
 msgstr "Nie ma nic do przetłumaczenia!"
 
 #: templates/rosetta/languages.html:38
-msgid "You haven't specified any languages in your settings file, or haven't yet generated a batch of translation catalogs."
-msgstr "Nie podałeś żadnych języków w plikach ustawień, lub nie wygenerowałeś jeszcze katalogów do tłumaczeń."
+msgid ""
+"You haven't specified any languages in your settings file, or haven't yet "
+"generated a batch of translation catalogs."
+msgstr ""
+"Nie podałeś żadnych języków w plikach ustawień, lub nie wygenerowałeś "
+"jeszcze katalogów do tłumaczeń."
 
 #: templates/rosetta/languages.html:39
-msgid "Please refer to <a href='http://www.djangoproject.com/documentation/i18n/'>Django's I18N documentation</a> for a guide on how to set up internationalization for your project."
-msgstr "Sprawdź pomoc dotyczącą <a href='http://www.djangoproject.com/documentation/i18n/'>internacjonalizacji Django I18N </a>, aby znaleźć dokumentację na temat internacjonalizacji twojego projektu."
+# python-format
+msgid ""
+"Please refer to <a href=\"%(i18n_doc_link)s\">Django's I18N documentation</"
+"a> for a guide on how to set up internationalization for your project."
+msgstr ""
+"Sprawdź pomoc dotyczącą <a href=\"%(i18n_doc_link)s\">internacjonalizacji Django "
+"I18N </a>, aby znaleźć dokumentację na "
+"temat internacjonalizacji twojego projektu."
 
 #: templates/rosetta/pofile.html:7
 msgid "Pick another file"

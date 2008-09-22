@@ -7,8 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Rosetta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-04 10:30+0200\n"
-"POT-Creation-Date: 2008-09-04 10:30+0200\n"
+"POT-Creation-Date: 2008-09-22 10:18+0200\n"
 "Last-Translator: Nazar Leush <nazar@pleso.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -19,45 +18,45 @@ msgstr ""
 msgid "Home"
 msgstr "Домівка"
 
-#: templates/rosetta/languages.html:3
+#: templates/rosetta/languages.html:3 templates/rosetta/languages.html.py:4
 msgid "Language selection"
 msgstr "Вибір мови"
 
-#: templates/rosetta/languages.html:13
+#: templates/rosetta/languages.html:14
 msgid "File"
 msgstr "Файл"
 
-#: templates/rosetta/languages.html:14
+#: templates/rosetta/languages.html:15
 msgid "Messages"
 msgstr "Повідомлень"
 
-#: templates/rosetta/languages.html:15
+#: templates/rosetta/languages.html:16
 msgid "Translated"
 msgstr "Перекладено"
 
-#: templates/rosetta/languages.html:16
+#: templates/rosetta/languages.html:17
 msgid "Obsolete"
 msgstr "Застарілих"
 
-#: templates/rosetta/languages.html:17
+#: templates/rosetta/languages.html:18
 msgid "Progress"
 msgstr "Завершено"
 
-#: templates/rosetta/languages.html:36
-msgid "Nothing to translatate!"
+#: templates/rosetta/languages.html:37
+msgid "Nothing to translate!"
 msgstr ""
 
-#: templates/rosetta/languages.html:37
+#: templates/rosetta/languages.html:38
 msgid ""
 "You haven't specified any languages in your settings file, or haven't yet "
 "generated a batch of translation catalogs."
 msgstr ""
 
-#: templates/rosetta/languages.html:38
+#: templates/rosetta/languages.html:39
+#, python-format
 msgid ""
-"Please refer to <a href='http://www.djangoproject.com/documentation/"
-"i18n/'>Django's I18N documentation</a> for a guide on how to set up "
-"internationalization for your project."
+"Please refer to <a href=\"%(i18n_doc_link)s\">Django's I18N documentation</"
+"a> for a guide on how to set up internationalization for your project."
 msgstr ""
 
 #: templates/rosetta/pofile.html:7
@@ -76,63 +75,67 @@ msgstr "Завершено: %(percent_translated)s%"
 msgid "File is read-only: download the file when done editing!"
 msgstr "Файл тільки для читання: завантажте файл після завершення редагування!"
 
-#: templates/rosetta/pofile.html:20
+#: templates/rosetta/pofile.html:19 templates/rosetta/pofile.html.py:44
+msgid "English"
+msgstr "Англійська"
+
+#: templates/rosetta/pofile.html:21
 #, python-format
 msgid "Translate into %(rosetta_i18n_lang_name)s"
 msgstr "Переклад на %(rosetta_i18n_lang_name)s"
 
-#: templates/rosetta/pofile.html:23
+#: templates/rosetta/pofile.html:24
 msgid "Display:"
 msgstr "Відображати:"
 
-#: templates/rosetta/pofile.html:24
+#: templates/rosetta/pofile.html:25
 msgid "Untranslated only"
 msgstr "Тільки неперекладені"
 
-#: templates/rosetta/pofile.html:25
+#: templates/rosetta/pofile.html:26
 msgid "Translated only"
 msgstr "Тільки перекладені"
 
-#: templates/rosetta/pofile.html:26
+#: templates/rosetta/pofile.html:27
 msgid "Both"
 msgstr "Всі"
 
-#: templates/rosetta/pofile.html:32
+#: templates/rosetta/pofile.html:33
 msgid "Search"
 msgstr "Пошук"
 
-#: templates/rosetta/pofile.html:34
+#: templates/rosetta/pofile.html:35
 msgid "Go"
 msgstr "Вперед"
 
-#: templates/rosetta/pofile.html:43
-msgid "English"
-msgstr "Англійська"
-
-#: templates/rosetta/pofile.html:45
+#: templates/rosetta/pofile.html:46
 msgid "Occurrences(s)"
 msgstr "Зустрічається в"
 
-#: templates/rosetta/pofile.html:71
+#: templates/rosetta/pofile.html:67
+msgid "suggest"
+msgstr ""
+
+#: templates/rosetta/pofile.html:75
 #, python-format
 msgid "%(more_count)s more"
 msgid_plural "%(more_count)s more"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/rosetta/pofile.html:83
+#: templates/rosetta/pofile.html:87
 msgid "Save and translate next block"
 msgstr "Записати і перекласти наступний блок"
 
-#: templates/rosetta/pofile.html:87
+#: templates/rosetta/pofile.html:91
 msgid "Skip to page:"
 msgstr "Перейти до сторінки:"
 
-#: templates/rosetta/pofile.html:100
+#: templates/rosetta/pofile.html:104
 msgid "Displaying:"
 msgstr "Відображення:"
 
-#: templates/rosetta/pofile.html:102
+#: templates/rosetta/pofile.html:106
 #, python-format
 msgid "%(hits)s/%(message_number)s message"
 msgid_plural "%(hits)s/%(message_number)s messages"
