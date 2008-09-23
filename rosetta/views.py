@@ -84,6 +84,15 @@ def home(request):
                 try:
                     rosetta_i18n_pofile.save()
                     rosetta_i18n_pofile.save_as_mofile(rosetta_i18n_fn.replace('.po','.mo'))
+                    
+                    try:
+                        if hasattr(settings, 'WSGI_SCRIPT_FILE') and settings.WSGI_SCRIPT_FILE:
+                            os.utime(settings.WSGI_SCRIPT_FILE, None)
+                        elif hasattr(rosetta_settings, 'WSGI_SCRIPT_FILE') and rosetta_settings.WSGI_SCRIPT_FILE:
+                            os.utime(rosetta_settings.WSGI_SCRIPT_FILE, None)
+                    except OSError:
+                        pass
+                        
                 except:
                     request.session['rosetta_i18n_write'] = False
                 
