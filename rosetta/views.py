@@ -85,11 +85,12 @@ def home(request):
                     rosetta_i18n_pofile.save()
                     rosetta_i18n_pofile.save_as_mofile(rosetta_i18n_fn.replace('.po','.mo'))
                     
+                    # Try auto-reloading
                     try:
-                        if hasattr(settings, 'WSGI_SCRIPT_FILE') and settings.WSGI_SCRIPT_FILE:
-                            os.utime(settings.WSGI_SCRIPT_FILE, None)
-                        elif hasattr(rosetta_settings, 'WSGI_SCRIPT_FILE') and rosetta_settings.WSGI_SCRIPT_FILE:
-                            os.utime(rosetta_settings.WSGI_SCRIPT_FILE, None)
+                        if (hasattr(rosetta_settings,'WSGI_AUTO_RELOAD') and rosetta_settings.WSGI_AUTO_RELOAD or \
+                            hasattr(settings,'WSGI_AUTO_RELOAD') and settings.WSGI_AUTO_RELOAD) and \
+                            request.environ.has_key('mod_wsgi.application_group') and request.environ.has_key('SCRIPT_FILENAME'):
+                                os.utime(request.environ.get('SCRIPT_FILENAME'), None)
                     except OSError:
                         pass
                         
@@ -141,7 +142,9 @@ def home(request):
                 page_range = range(1,1+paginator.num_pages)
         ADMIN_MEDIA_PREFIX = settings.ADMIN_MEDIA_PREFIX
         ENABLE_TRANSLATION_SUGGESTIONS = rosetta_settings.ENABLE_TRANSLATION_SUGGESTIONS
-        return render_to_response('rosetta/pofile.html', locals())      
+        
+        return render_to_response('rosetta/pofile.html', locals())
+        
         
     else:
         return list_languages(request)
