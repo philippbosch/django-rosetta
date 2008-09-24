@@ -86,15 +86,15 @@ def home(request):
                     rosetta_i18n_pofile.save_as_mofile(rosetta_i18n_fn.replace('.po','.mo'))
                     
                     # Try auto-reloading
-                    try:
-                        if (hasattr(rosetta_settings,'WSGI_AUTO_RELOAD') and rosetta_settings.WSGI_AUTO_RELOAD or \
-                            hasattr(settings,'WSGI_AUTO_RELOAD') and settings.WSGI_AUTO_RELOAD) and \
-                            request.environ.has_key('mod_wsgi.application_group') and \
-                            request.environ.has_key('SCRIPT_FILENAME') and \
-                            int(request.environ.get('mod_wsgi.script_reloading', '0')):
+                    if (hasattr(rosetta_settings,'WSGI_AUTO_RELOAD') and rosetta_settings.WSGI_AUTO_RELOAD or \
+                        hasattr(settings,'WSGI_AUTO_RELOAD') and settings.WSGI_AUTO_RELOAD) and \
+                        request.environ.has_key('mod_wsgi.application_group') and \
+                        request.environ.has_key('SCRIPT_FILENAME') and \
+                        int(request.environ.get('mod_wsgi.script_reloading', '0')):
+                            try:
                                 os.utime(request.environ.get('SCRIPT_FILENAME'), None)
-                    except OSError:
-                        pass
+                            except OSError:
+                                pass
                         
                 except:
                     request.session['rosetta_i18n_write'] = False
