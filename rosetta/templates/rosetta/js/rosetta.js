@@ -11,11 +11,10 @@ google.setOnLoadCallback(function() {
         a.attr('class','suggesting').html('...');
         google.language.translate(orig, "en", '{{rosetta_i18n_lang_code}}', function(result) {
             if (!result.error) {
-                var translation=unescape(result.translation).replace(/&#39;/g,'\'').replace(/&quot;/g,'"').replace(/%\s+(\([^\)]+\))\s*s/g,' %$1s ');
-                trans.val(translation);
+                trans.val(unescape(result.translation).replace(/&#39;/g,'\'').replace(/&quot;/g,'"').replace(/%\s+(\([^\)]+\))\s*s/g,' %$1s '));
                 a.hide();
             } else {
-                a.attr('class','suggest').html(str);
+                a.hide().before($('<span class="alert">'+result.error.message+'</span>'))
             }
         });
         return false;

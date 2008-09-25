@@ -46,11 +46,22 @@ def find_pos(lang, include_djangos = False, include_rosetta = False):
             
     ret = set()
     rx=re.compile(r'(\w+)/../\1')
+    langs = (lang,)
+    if u'-' in lang:
+        _l,_c =  map(lambda x:x.lower(),lang.split(u'-'))
+        langs += (u'%s_%s' %(_l, _c), )
+        langs += (u'%s_%s' %(_l, _c.upper()), )
+    elif u'_' in lang:
+        _l,_c = map(lambda x:x.lower(),lang.split(u'_'))
+        langs += (u'%s-%s' %(_l, _c), )
+        langs += (u'%s-%s' %(_l, _c.upper()), )
+        
     for path in paths:
-        dirname = rx.sub(r'\1', '%s/%s/LC_MESSAGES/' %(path,lang))
-        for fn in ('django.po','djangojs.po',):
-            if os.path.isfile(dirname+fn):
-                ret.add(dirname+fn)
+        for lang_ in langs:
+            dirname = rx.sub(r'\1', '%s/%s/LC_MESSAGES/' %(path,lang_))
+            for fn in ('django.po','djangojs.po',):
+                if os.path.isfile(dirname+fn):
+                    ret.add(dirname+fn)
     return list(ret)
 
 def pagination_range(first,last,current):
