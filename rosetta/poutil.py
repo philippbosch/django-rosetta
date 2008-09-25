@@ -49,12 +49,10 @@ def find_pos(lang, include_djangos = False, include_rosetta = False):
     langs = (lang,)
     if u'-' in lang:
         _l,_c =  map(lambda x:x.lower(),lang.split(u'-'))
-        langs += (u'%s_%s' %(_l, _c), )
-        langs += (u'%s_%s' %(_l, _c.upper()), )
+        langs += (u'%s_%s' %(_l, _c), u'%s_%s' %(_l, _c.upper()), )
     elif u'_' in lang:
         _l,_c = map(lambda x:x.lower(),lang.split(u'_'))
-        langs += (u'%s-%s' %(_l, _c), )
-        langs += (u'%s-%s' %(_l, _c.upper()), )
+        langs += (u'%s-%s' %(_l, _c), u'%s-%s' %(_l, _c.upper()), )
         
     for path in paths:
         for lang_ in langs:
