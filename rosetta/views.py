@@ -9,7 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.cache import never_cache
 from rosetta.polib import pofile
 from rosetta.poutil import find_pos, pagination_range
-from rosetta import settings as rosetta_settings
+from rosetta.conf import settings as rosetta_settings
 import re, os, rosetta, datetime
 
 
@@ -86,8 +86,7 @@ def home(request):
                     rosetta_i18n_pofile.save_as_mofile(rosetta_i18n_fn.replace('.po','.mo'))
                     
                     # Try auto-reloading via the WSGI daemon mode reload mechanism
-                    if (hasattr(rosetta_settings,'WSGI_AUTO_RELOAD') and rosetta_settings.WSGI_AUTO_RELOAD or \
-                        hasattr(settings,'WSGI_AUTO_RELOAD') and settings.WSGI_AUTO_RELOAD) and \
+                    if  rosetta_settings.WSGI_AUTO_RELOAD and \
                         request.environ.has_key('mod_wsgi.process_group') and \
                         request.environ.get('mod_wsgi.process_group',None) and \
                         request.environ.has_key('SCRIPT_FILENAME') and \

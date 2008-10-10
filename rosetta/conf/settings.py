@@ -1,9 +1,11 @@
+from django.conf import settings
+
 # Number of messages to display per page.
-MESSAGES_PER_PAGE = 10
+MESSAGES_PER_PAGE = getattr(settings,'ROSETTA_MESSAGES_PER_PAGE',10)
 
 
 # Enable Google translation suggestions
-ENABLE_TRANSLATION_SUGGESTIONS = True
+ENABLE_TRANSLATION_SUGGESTIONS = getattr(settings,'ROSETTA_ENABLE_TRANSLATION_SUGGESTIONS',True)
 
 
 """
@@ -28,4 +30,4 @@ Refs:
  * http://code.google.com/p/modwsgi/wiki/ConfigurationDirectives#WSGIReloadMechanism
 
 """
-WSGI_AUTO_RELOAD = False
+WSGI_AUTO_RELOAD = getattr(settings,'ROSETTA_WSGI_AUTO_RELOAD', False)
