@@ -59,7 +59,7 @@ def find_pos(lang, include_djangos = False, include_rosetta = False):
             dirname = rx.sub(r'\1', '%s/%s/LC_MESSAGES/' %(path,lang_))
             for fn in ('django.po','djangojs.po',):
                 if os.path.isfile(dirname+fn):
-                    ret.add(dirname+fn)
+                    ret.add(os.path.abspath(dirname+fn))
     return list(ret)
 
 def pagination_range(first,last,current):
