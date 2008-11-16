@@ -3,21 +3,22 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-	<link rel="stylesheet" href="{{ADMIN_MEDIA_PREFIX}}css/forms.css" type="text/css"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="{{ADMIN_MEDIA_PREFIX}}css/base.css" type="text/css"/>
+    <link rel="stylesheet" href="{{ADMIN_MEDIA_PREFIX}}css/forms.css" type="text/css"/>
     <link rel="stylesheet" href="{{ADMIN_MEDIA_PREFIX}}css/changelists.css" type="text/css"/>	
-	<style type="text/css" media="screen">
-	   {% include 'rosetta/css/rosetta.css' %}
-	</style>
-	<script src="http://www.google.com/jsapi" type="text/javascript"></script>    
-	<script type="text/javascript">
-	//<!--
-	    google.load("jquery", "1");
+    <style type="text/css" media="screen">
+        {% include 'rosetta/css/rosetta.css' %}
+    </style>
+    <script src="http://www.google.com/jsapi" type="text/javascript"></script>    
+    <script type="text/javascript">
+    //<!--
+        google.load("jquery", "1");
         {% if ENABLE_TRANSLATION_SUGGESTIONS %}google.load("language", "1");{% endif %}
-	   {% include 'rosetta/js/rosetta.js' %}
-	//-->
-	</script>
-	<title>Rosetta - {% block pagetitle %}{% endblock %}</title>
+        {% include 'rosetta/js/rosetta.js' %}
+    //-->
+    </script>
+    <title>Rosetta - {% block pagetitle %}{% endblock %}</title>
 </head>
 <body>
     <div id="container">
