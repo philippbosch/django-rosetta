@@ -4,7 +4,7 @@ from django.core.paginator import Paginator, InvalidPage
 from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
-from django.utils.encoding import smart_unicode
+from django.utils.encoding import smart_unicode, force_unicode
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.cache import never_cache
 from rosetta.polib import pofile
@@ -76,8 +76,8 @@ def home(request):
                         
             if file_change and rosetta_i18n_write:
                 try:
-                    rosetta_i18n_pofile.metadata['Last-Translator'] = str("%s %s <%s>" %(request.user.first_name,request.user.last_name,request.user.email))
-                    rosetta_i18n_pofile.metadata['X-Translated-Using'] = str("django-rosetta %s" % rosetta.get_version(False))
+                    rosetta_i18n_pofile.metadata['Last-Translator'] = str(u"%s %s <%s>" %(request.user.first_name,request.user.last_name,request.user.email))
+                    rosetta_i18n_pofile.metadata['X-Translated-Using'] = str(u"django-rosetta %s" % rosetta.get_version(False))
                     rosetta_i18n_pofile.metadata['PO-Revision-Date'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M%z')
                 except UnicodeDecodeError:
                     pass
