@@ -2,9 +2,8 @@
 # -*- coding: utf-8 -*-
 #
 # License: MIT (see LICENSE file provided)
-# vim600: fdm=marker tabstop=4 shiftwidth=4 expandtab ai
+# vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4:
 
-# Description {{{
 """
 **polib** allows you to manipulate, create, modify gettext files (pot, po
 and mo files).  You can load existing files, iterate through it's entries,
@@ -33,38 +32,19 @@ new files/entries.
 >>> # or you may want to compile the po file
 >>> # po.save_as_mofile('tests/test_utf8.mo')
 """
-# }}}
 
 __author__    = 'David JEAN LOUIS <izimobil@gmail.com>'
-__version__   = '0.3.1'
+__version__   = '0.4.1'
+__all__       = ['pofile', 'POFile', 'POEntry', 'mofile', 'MOFile', 'MOEntry',
+                 'detect_encoding', 'escape', 'unescape']
 
-
-# dependencies {{{
-try:
-    import struct
-    import textwrap
-    import warnings
-except ImportError, exc:
-    raise ImportError('polib requires python 2.3 or later with the standard' \
-        ' modules "struct", "textwrap" and "warnings" (details: %s)' % exc)
-# }}}
-
-__all__ = ['pofile', 'POFile', 'POEntry', 'mofile', 'MOFile', 'MOEntry',
-           'detect_encoding', 'quote', 'unquote']
-
-# shortcuts for performance improvement {{{
-# yes, yes, this is quite ugly but *very* efficient
-_dictget    = dict.get
-_listappend = list.append
-_listpop    = list.pop
-_strjoin    = str.join
-_strsplit   = str.split
-_strstrip   = str.strip
-_strreplace = str.replace
-_textwrap   = textwrap.wrap
-# }}}
+import struct
+import textwrap
+import warnings
 
 default_encoding = 'utf-8'
+
+# function pofile() {{{
 
 def pofile(fpath, **kwargs):
     """
@@ -83,7 +63,7 @@ def pofile(fpath, **kwargs):
     **Example**:
 
     >>> import polib
-    >>> po = polib.pofile('tests/test_utf8.po')
+    >>> po = polib.pofile('tests/test_weird_occurrences.po')
     >>> po #doctest: +ELLIPSIS
     <POFile instance at ...>
     >>> import os, tempfile
@@ -103,18 +83,18 @@ def pofile(fpath, **kwargs):
     ...     finally:
     ...         os.unlink(tmpf)
     """
-    # pofile {{{
-    if _dictget(kwargs, 'autodetect_encoding', True) == True:
+    if kwargs.get('autodetect_encoding', True) == True:
         enc = detect_encoding(fpath)
     else:
-        enc = _dictget(kwargs, 'encoding', default_encoding)
+        enc = kwargs.get('encoding', default_encoding)
     parser = _POFileParser(fpath)
     instance = parser.parse()
-    instance.wrapwidth = _dictget(kwargs, 'wrapwidth', 78)
+    instance.wrapwidth = kwargs.get('wrapwidth', 78)
     instance.encoding  = enc
     return instance
-    # }}}
 
+# }}}
+# function mofile() {{{
 
 def mofile(fpath, **kwargs):
     """
@@ -151,18 +131,18 @@ def mofile(fpath, **kwargs):
     ...     finally:
     ...         os.unlink(tmpf)
     """
-    # mofile {{{
-    if _dictget(kwargs, 'autodetect_encoding', True) == True:
+    if kwargs.get('autodetect_encoding', True) == True:
         enc = detect_encoding(fpath)
     else:
-        enc = _dictget(kwargs, 'encoding', default_encoding)
+        enc = kwargs.get('encoding', default_encoding)
     parser = _MOFileParser(fpath)
     instance = parser.parse()
-    instance.wrapwidth = _dictget(kwargs, 'wrapwidth', 78)
+    instance.wrapwidth = kwargs.get('wrapwidth', 78)
     instance.encoding = enc
     return instance
-    # }}}
 
+# }}}
+# function detect_encoding() {{{
 
 def detect_encoding(fpath):
     """
@@ -174,18 +154,17 @@ def detect_encoding(fpath):
 
     **Examples**:
 
-    >>> print detect_encoding('tests/test_noencoding.po')
+    >>> print(detect_encoding('tests/test_noencoding.po'))
     utf-8
-    >>> print detect_encoding('tests/test_utf8.po')
+    >>> print(detect_encoding('tests/test_utf8.po'))
     UTF-8
-    >>> print detect_encoding('tests/test_utf8.mo')
+    >>> print(detect_encoding('tests/test_utf8.mo'))
     UTF-8
-    >>> print detect_encoding('tests/test_iso-8859-15.po')
+    >>> print(detect_encoding('tests/test_iso-8859-15.po'))
     ISO_8859-15
-    >>> print detect_encoding('tests/test_iso-8859-15.mo')
+    >>> print(detect_encoding('tests/test_iso-8859-15.mo'))
     ISO_8859-15
     """
-    # detect_encoding {{{
     import re
     rx = re.compile(r'"?Content-Type:.+? charset=([\w_\-:\.]+)')
     f = open(fpath)
@@ -193,57 +172,56 @@ def detect_encoding(fpath):
         match = rx.search(l)
         if match:
             f.close()
-            return _strstrip(match.group(1))
+            return match.group(1).strip()
     f.close()
     return default_encoding
-    # }}}
 
+# }}}
+# function escape() {{{
 
-def quote(st):
+def escape(st):
     """
-    Quote and return the given string *st*.
+    Escape special chars and return the given string *st*.
 
     **Examples**:
 
-    >>> quote('\\t and \\n and \\r and " and \\\\')
+    >>> escape('\\t and \\n and \\r and " and \\\\')
     '\\\\t and \\\\n and \\\\r and \\\\" and \\\\\\\\'
     """
-    # quote {{{
-    st = _strreplace(st, '\\', r'\\')
-    st = _strreplace(st, '\t', r'\t')
-    st = _strreplace(st, '\r', r'\r')
-    st = _strreplace(st, '\n', r'\n')
-    st = _strreplace(st, '\"', r'\"')
+    st = st.replace('\\', r'\\')
+    st = st.replace('\t', r'\t')
+    st = st.replace('\r', r'\r')
+    st = st.replace('\n', r'\n')
+    st = st.replace('\"', r'\"')
     return st
-    # }}}
 
+# }}}
+# function unescape() {{{
 
-def unquote(st):
+def unescape(st):
     """
-    Unquote and return the given string *st*.
+    Unescape special chars and return the given string *st*.
 
     **Examples**:
 
-    >>> unquote('\\\\t and \\\\n and \\\\r and \\\\" and \\\\\\\\')
+    >>> unescape('\\\\t and \\\\n and \\\\r and \\\\" and \\\\\\\\')
     '\\t and \\n and \\r and " and \\\\'
     """
-    # unquote {{{
-    st = _strreplace(st, r'\"', '"')
-    st = _strreplace(st, r'\n', '\n')
-    st = _strreplace(st, r'\r', '\r')
-    st = _strreplace(st, r'\t', '\t')
-    st = _strreplace(st, r'\\', '\\')
+    st = st.replace(r'\"', '"')
+    st = st.replace(r'\n', '\n')
+    st = st.replace(r'\r', '\r')
+    st = st.replace(r'\t', '\t')
+    st = st.replace(r'\\', '\\')
     return st
-    # }}}
 
+# }}}
+# class _BaseFile {{{
 
 class _BaseFile(list):
     """
     Common parent class for POFile and MOFile classes.
     This class must **not** be instanciated directly.
     """
-    # class _BaseFile {{{
-
 
     def __init__(self, fpath=None, wrapwidth=78, encoding=default_encoding):
         """
@@ -274,10 +252,10 @@ class _BaseFile(list):
         entries = [self.metadata_as_entry()] + \
                   [e for e in self if not e.obsolete]
         for entry in entries:
-            _listappend(ret, entry.__str__(self.wrapwidth))
+            ret.append(entry.__str__(self.wrapwidth))
         for entry in self.obsolete_entries():
-            _listappend(ret, entry.__str__(self.wrapwidth))
-        return _strjoin('\n', ret)
+            ret.append(entry.__str__(self.wrapwidth))
+        return '\n'.join(ret)
 
     def __repr__(self):
         """Return the official string representation of the object."""
@@ -291,10 +269,9 @@ class _BaseFile(list):
             strs = []
             for name, value in mdata:
                 # Strip whitespace off each line in a multi-line entry
-                value = _strjoin('\n', [_strstrip(v)
-                                        for v in _strsplit(value, '\n')])
-                _listappend(strs, '%s: %s' % (name, value))
-            e.msgstr = _strjoin('\n', strs) + '\n'
+                value = '\n'.join([v.strip() for v in value.split('\n')])
+                strs.append('%s: %s' % (name, value))
+            e.msgstr = '\n'.join(strs) + '\n'
         return e
 
     def save(self, fpath=None, repr_method='__str__'):
@@ -369,15 +346,15 @@ class _BaseFile(list):
         for data in data_order:
             try:
                 value = metadata.pop(data)
-                _listappend(ordered_data, (data, value))
+                ordered_data.append((data, value))
             except KeyError:
                 pass
         # the rest of the metadata won't be ordered there are no specs for this
         keys = metadata.keys()
-        keys.sort()
+        list(keys).sort()
         for data in keys:
             value = metadata[data]
-            _listappend(ordered_data, (data, value))
+            ordered_data.append((data, value))
         return ordered_data
 
     def to_binary(self):
@@ -399,7 +376,7 @@ class _BaseFile(list):
         entries.sort(cmp)
         # add metadata entry
         mentry = self.metadata_as_entry()
-        mentry.msgstr = _strreplace(mentry.msgstr, '\\n', '').lstrip() + '\n'
+        mentry.msgstr = mentry.msgstr.replace('\\n', '').lstrip() + '\n'
         entries = [mentry] + entries
         entries_len = len(entries)
         for e in entries:
@@ -422,19 +399,20 @@ class _BaseFile(list):
             koffsets += [l1, o1+keystart]
             voffsets += [l2, o2+valuestart]
         offsets = koffsets + voffsets
-        output = struct.pack("Iiiiiii",
+        output = struct.pack("IIIIIII",
                              0x950412de,        # Magic number
                              0,                 # Version
                              entries_len,       # # of entries
                              7*4,               # start of key index
                              7*4+entries_len*8, # start of value index
                              0, 0)              # size and offset of hash table
-        output += array.array("i", offsets).tostring()
+        output += array.array("I", offsets).tostring()
         output += ids
         output += strs
         return output
-    # }}}
 
+# }}}
+# class POFile {{{
 
 class POFile(_BaseFile):
     '''
@@ -451,21 +429,21 @@ class POFile(_BaseFile):
     >>> entry1.occurrences = [('testfile', 12),('another_file', 1)]
     >>> entry1.comment = "Some useful comment"
     >>> entry2 = POEntry(
-    ...     msgid="I need my dirty cheese",
-    ...     msgstr="Je veux mon sale fromage"
+    ...     msgid="Peace in some languages",
+    ...     msgstr="Pace سلام שלום Hasîtî 和平"
     ... )
     >>> entry2.occurrences = [('testfile', 15),('another_file', 5)]
     >>> entry2.comment = "Another useful comment"
     >>> entry3 = POEntry(
     ...     msgid='Some entry with quotes " \\"',
-    ...     msgstr=u'Un message unicode avec des quotes " \\"'
+    ...     msgstr='Un message unicode avec des quotes " \\"'
     ... )
     >>> entry3.comment = "Test string quoting"
     >>> po.append(entry1)
     >>> po.append(entry2)
     >>> po.append(entry3)
     >>> po.header = "Some Header"
-    >>> print po
+    >>> print(po)
     # Some Header
     msgid ""
     msgstr ""
@@ -477,19 +455,18 @@ class POFile(_BaseFile):
     <BLANKLINE>
     #. Another useful comment
     #: testfile:15 another_file:5
-    msgid "I need my dirty cheese"
-    msgstr "Je veux mon sale fromage"
+    msgid "Peace in some languages"
+    msgstr "Pace سلام שלום Hasîtî 和平"
     <BLANKLINE>
     #. Test string quoting
     msgid "Some entry with quotes \\" \\""
     msgstr "Un message unicode avec des quotes \\" \\""
     <BLANKLINE>
     '''
-    # class POFile {{{
 
     def __str__(self):
         """Return the string representation of the po file"""
-        ret, headers = '', _strsplit(self.header, '\n')
+        ret, headers = '', self.header.split('\n')
         for header in headers:
             if header[:1] in [',', ':']:
                 ret += '#%s\n' % header
@@ -608,24 +585,17 @@ class POFile(_BaseFile):
         for entry in refpot:
             e = self.find(entry.msgid)
             if e is None:
-                # entry is not in the po file, we must add it
-                # entry is created with msgid, occurrences and comment
-                self.append(POEntry(
-                    msgid=entry.msgid,
-                    occurrences=entry.occurrences,
-                    comment=entry.comment
-                ))
-            else:
-                # entry found, we update it...
-                e.occurrences = entry.occurrences
-                e.comment = entry.comment
+                e = POEntry()
+                self.append(e)
+            e.merge(entry)
         # ok, now we must "obsolete" entries that are not in the refpot
         # anymore
         for entry in self:
             if refpot.find(entry.msgid) is None:
                 entry.obsolete = True
-    # }}}
 
+# }}}
+# class MOFile {{{
 
 class MOFile(_BaseFile):
     '''
@@ -645,12 +615,12 @@ class MOFile(_BaseFile):
     ... )
     >>> entry3 = MOEntry(
     ...     msgid='Some entry with quotes " \\"',
-    ...     msgstr=u'Un message unicode avec des quotes " \\"'
+    ...     msgstr='Un message unicode avec des quotes " \\"'
     ... )
     >>> mo.append(entry1)
     >>> mo.append(entry2)
     >>> mo.append(entry3)
-    >>> print mo
+    >>> print(mo)
     msgid ""
     msgstr ""
     <BLANKLINE>
@@ -664,7 +634,6 @@ class MOFile(_BaseFile):
     msgstr "Un message unicode avec des quotes \\" \\""
     <BLANKLINE>
     '''
-    # class MOFile {{{
 
     def __init__(self, fpath=None, wrapwidth=78):
         """
@@ -722,24 +691,24 @@ class MOFile(_BaseFile):
         Convenience method to keep the same interface with POFile instances.
         """
         return []
-    # }}}
 
+# }}}
+# class _BaseEntry {{{
 
 class _BaseEntry(object):
     """
     Base class for POEntry or MOEntry objects.
     This class must *not* be instanciated directly.
     """
-    # class _BaseEntry {{{
 
     def __init__(self, *args, **kwargs):
         """Base Entry constructor."""
-        self.msgid = _dictget(kwargs, 'msgid', '')
-        self.msgstr = _dictget(kwargs, 'msgstr', '')
-        self.msgid_plural = _dictget(kwargs, 'msgid_plural', '')
-        self.msgstr_plural = _dictget(kwargs, 'msgstr_plural', {})
-        self.obsolete = _dictget(kwargs, 'obsolete', False)
-        self.encoding = _dictget(kwargs, 'encoding', default_encoding)
+        self.msgid = kwargs.get('msgid', '')
+        self.msgstr = kwargs.get('msgstr', '')
+        self.msgid_plural = kwargs.get('msgid_plural', '')
+        self.msgstr_plural = kwargs.get('msgstr_plural', {})
+        self.obsolete = kwargs.get('obsolete', False)
+        self.encoding = kwargs.get('encoding', default_encoding)
 
     def __repr__(self):
         """Return the official string representation of the object."""
@@ -763,7 +732,7 @@ class _BaseEntry(object):
         if self.msgstr_plural:
             # write the msgstr_plural if any
             msgstrs = self.msgstr_plural
-            keys = msgstrs.keys()
+            keys = list(msgstrs)
             keys.sort()
             for index in keys:
                 msgstr = msgstrs[index]
@@ -772,8 +741,8 @@ class _BaseEntry(object):
         else:
             # otherwise write the msgstr
             ret += self._str_field("msgstr", delflag, "", self.msgstr)
-        _listappend(ret, '')
-        return _strjoin('\n', ret)
+        ret.append('')
+        return '\n'.join(ret)
 
     def _str_field(self, fieldname, delflag, plural_index, field):
         field = self._decode(field)
@@ -785,17 +754,21 @@ class _BaseEntry(object):
         else:
             lines = [field] # needed for the empty string case
         ret = ['%s%s%s "%s"' % (delflag, fieldname, plural_index,
-                                quote(_listpop(lines, 0)))]
+                                escape(lines.pop(0)))]
         for mstr in lines:
-            _listappend(ret, '%s"%s"' % (delflag, quote(mstr)))
+            ret.append('%s"%s"' % (delflag, escape(mstr)))
         return ret
 
     def _decode(self, st):
-        if isinstance(st, unicode):
-            return st.encode(self.encoding)
-        return st
-    # }}}
+        try:
+            if isinstance(st, unicode):
+                st = st.encode(self.encoding)
+            return st
+        except:
+            return st
 
+# }}}
+# class POEntry {{{
 
 class POEntry(_BaseEntry):
     """
@@ -805,22 +778,27 @@ class POEntry(_BaseEntry):
 
     >>> entry = POEntry(msgid='Welcome', msgstr='Bienvenue')
     >>> entry.occurrences = [('welcome.py', 12), ('anotherfile.py', 34)]
-    >>> print entry
+    >>> print(entry)
     #: welcome.py:12 anotherfile.py:34
     msgid "Welcome"
     msgstr "Bienvenue"
     <BLANKLINE>
     >>> entry = POEntry()
-    >>> entry.occurrences = [('src/spam.c', 32), ('src/eggs.c', 45)]
-    >>> entry.tcomment = 'A plural translation'
+    >>> entry.occurrences = [('src/some-very-long-filename-that-should-not-be-wrapped-even-if-it-is-larger-than-the-wrap-limit.c', 32), ('src/eggs.c', 45)]
+    >>> entry.comment = 'A plural translation. This is a very very very long line please do not wrap, this is just for testing comment wrapping...'
+    >>> entry.tcomment = 'A plural translation. This is a very very very long line please do not wrap, this is just for testing comment wrapping...'
     >>> entry.flags.append('c-format')
     >>> entry.msgid = 'I have spam but no egg !'
     >>> entry.msgid_plural = 'I have spam and %d eggs !'
     >>> entry.msgstr_plural[0] = "J'ai du jambon mais aucun oeuf !"
     >>> entry.msgstr_plural[1] = "J'ai du jambon et %d oeufs !"
-    >>> print entry
-    # A plural translation
-    #: src/spam.c:32 src/eggs.c:45
+    >>> print(entry)
+    #. A plural translation. This is a very very very long line please do not
+    #. wrap, this is just for testing comment wrapping...
+    # A plural translation. This is a very very very long line please do not wrap,
+    # this is just for testing comment wrapping...
+    #: src/some-very-long-filename-that-should-not-be-wrapped-even-if-it-is-larger-than-the-wrap-limit.c:32
+    #: src/eggs.c:45
     #, c-format
     msgid "I have spam but no egg !"
     msgid_plural "I have spam and %d eggs !"
@@ -828,15 +806,14 @@ class POEntry(_BaseEntry):
     msgstr[1] "J'ai du jambon et %d oeufs !"
     <BLANKLINE>
     """
-    # class POEntry {{{
 
     def __init__(self, *args, **kwargs):
         """POEntry constructor."""
         _BaseEntry.__init__(self, *args, **kwargs)
-        self.comment = _dictget(kwargs, 'comment', '')
-        self.tcomment = _dictget(kwargs, 'tcomment', '')
-        self.occurrences = _dictget(kwargs, 'occurrences', [])
-        self.flags = _dictget(kwargs, 'flags', [])
+        self.comment = kwargs.get('comment', '')
+        self.tcomment = kwargs.get('tcomment', '')
+        self.occurrences = kwargs.get('occurrences', [])
+        self.flags = kwargs.get('flags', [])
 
     def __str__(self, wrapwidth=78):
         """
@@ -847,57 +824,58 @@ class POEntry(_BaseEntry):
         ret = []
         # comment first, if any (with text wrapping as xgettext does)
         if self.comment != '':
-            comments = _strsplit(self._decode(self.comment), '\n')
+            comments = self._decode(self.comment).split('\n')
             for comment in comments:
                 if wrapwidth > 0 and len(comment) > wrapwidth-3:
-                    lines = _textwrap(comment, wrapwidth,
-                                      initial_indent='#. ',
-                                      subsequent_indent='#. ',
-                                      break_long_words=False)
-                    _listappend(ret, lines)
+                    ret += textwrap.wrap(comment, wrapwidth,
+                                         initial_indent='#. ',
+                                         subsequent_indent='#. ',
+                                         break_long_words=False)
                 else:
-                    _listappend(ret, '#. %s' % comment)
+                    ret.append('#. %s' % comment)
         # translator comment, if any (with text wrapping as xgettext does)
         if self.tcomment != '':
-            tcomments = _strsplit(self._decode(self.tcomment), '\n')
+            tcomments = self._decode(self.tcomment).split('\n')
             for tcomment in tcomments:
                 if wrapwidth > 0 and len(tcomment) > wrapwidth-2:
-                    lines = _textwrap(tcomment, wrapwidth,
-                                      initial_indent='# ',
-                                      subsequent_indent='# ',
-                                      break_long_words=False)
-                    _listappend(ret, lines)
+                    ret += textwrap.wrap(tcomment, wrapwidth,
+                                         initial_indent='# ',
+                                         subsequent_indent='# ',
+                                         break_long_words=False)
                 else:
-                    _listappend(ret, '# %s' % tcomment)
+                    ret.append('# %s' % tcomment)
         # occurrences (with text wrapping as xgettext does)
         if self.occurrences:
             filelist = []
             for fpath, lineno in self.occurrences:
-                _listappend(filelist, '%s:%s' % (self._decode(fpath), lineno))
-            filestr = _strjoin(' ', filelist)
+                if lineno:
+                    filelist.append('%s:%s' % (self._decode(fpath), lineno))
+                else:
+                    filelist.append('%s' % (self._decode(fpath)))
+            filestr = ' '.join(filelist)
             if wrapwidth > 0 and len(filestr)+3 > wrapwidth:
                 # XXX textwrap split words that contain hyphen, this is not 
                 # what we want for filenames, so the dirty hack is to 
                 # temporally replace hyphens with a char that a file cannot 
                 # contain, like "*"
-                lines = _textwrap(_strreplace(filestr, '-', '*'),
-                                  wrapwidth,
-                                  initial_indent='#: ',
-                                  subsequent_indent='#: ',
-                                  break_long_words=False)
+                lines = textwrap.wrap(filestr.replace('-', '*'),
+                                      wrapwidth,
+                                      initial_indent='#: ',
+                                      subsequent_indent='#: ',
+                                      break_long_words=False)
                 # end of the replace hack
                 for line in lines:
-                    _listappend(ret, _strreplace(line, '*', '-'))
+                    ret.append(line.replace('*', '-'))
             else:
-                _listappend(ret, '#: '+filestr)
+                ret.append('#: '+filestr)
         # flags
         if self.flags:
             flags = []
             for flag in self.flags:
-                _listappend(flags, flag)
-            _listappend(ret, '#, %s' % _strjoin(', ', flags))
-        _listappend(ret, _BaseEntry.__str__(self))
-        return _strjoin('\n', ret)
+                flags.append(flag)
+            ret.append('#, %s' % ', '.join(flags))
+        ret.append(_BaseEntry.__str__(self))
+        return '\n'.join(ret)
 
     def __cmp__(self, other):
         '''
@@ -914,7 +892,7 @@ class POEntry(_BaseEntry):
         >>> po.append(c1)
         >>> po.append(c2)
         >>> po.sort()
-        >>> print po
+        >>> print(po)
         # 
         msgid ""
         msgstr ""
@@ -981,7 +959,9 @@ class POEntry(_BaseEntry):
         else: return -1
 
     def translated(self):
-        """Return True if the entry has been translated or False"""
+        """
+        Return True if the entry has been translated or False.
+        """
         if self.obsolete or 'fuzzy' in self.flags:
             return False
         if self.msgstr != '':
@@ -993,8 +973,25 @@ class POEntry(_BaseEntry):
             return True
         return False
 
-    # }}}
+    def merge(self, other):
+        """
+        Merge the current entry with the given pot entry.
+        """
+        self.msgid        = other.msgid
+        self.occurrences  = other.occurrences
+        self.comment      = other.comment
+        self.flags        = other.flags
+        self.msgid_plural = other.msgid_plural
+        if other.msgstr_plural:
+            for pos in other.msgstr_plural:
+                try:
+                    # keep existing translation at pos if any
+                    self.msgstr_plural[pos]
+                except KeyError:
+                    self.msgstr_plural[pos] = ''
 
+# }}}
+# class MOEntry {{{
 
 class MOEntry(_BaseEntry):
     """
@@ -1005,27 +1002,27 @@ class MOEntry(_BaseEntry):
     >>> entry = MOEntry()
     >>> entry.msgid  = 'translate me !'
     >>> entry.msgstr = 'traduisez moi !'
-    >>> print entry
+    >>> print(entry)
     msgid "translate me !"
     msgstr "traduisez moi !"
     <BLANKLINE>
     """
-    # class MOEntry {{{
 
     def __str__(self, wrapwidth=78):
         """
         Return the string representation of the entry.
         """
         return _BaseEntry.__str__(self, wrapwidth)
-    # }}}
 
+# }}}
+# class _POFileParser {{{
 
 class _POFileParser(object):
     """
     A finite state machine to parse efficiently and correctly po
     file format.
     """
-    # class _POFileParser {{{
+
     def __init__(self, fpath):
         """
         Constructor.
@@ -1075,7 +1072,7 @@ class _POFileParser(object):
         """
         i, lastlen = 1, 0
         for line in self.fhandle:
-            line = _strstrip(line)
+            line = line.strip()
             if line == '':
                 i = i+1
                 continue
@@ -1118,22 +1115,22 @@ class _POFileParser(object):
         if self.current_entry:
             # since entries are added when another entry is found, we must add
             # the last entry here (only if there are lines)
-            _listappend(self.instance, self.current_entry)
+            self.instance.append(self.current_entry)
         # before returning the instance, check if there's metadata and if 
         # so extract it in a dict
         firstentry = self.instance[0]
         if firstentry.msgid == '': # metadata found
             # remove the entry
-            firstentry = _listpop(self.instance, 0)
+            firstentry = self.instance.pop(0)
             self.instance.metadata_is_fuzzy = firstentry.flags
             key = None
             for msg in firstentry.msgstr.splitlines():
                 try:
-                    key, val = _strsplit(msg, ':', 1)
-                    self.instance.metadata[key] = _strstrip(val)
+                    key, val = msg.split(':', 1)
+                    self.instance.metadata[key] = val.strip()
                 except:
                     if key is not None:
-                        self.instance.metadata[key] += '\n'+_strstrip(msg)
+                        self.instance.metadata[key] += '\n'+ msg.strip()
         # close opened file
         self.fhandle.close()
         return self.instance
@@ -1164,9 +1161,8 @@ class _POFileParser(object):
             (action, state) = self.transitions[(symbol, self.current_state)]
             if action():
                 self.current_state = state
-        except Exception, e:
-            raise IOError('Syntax error in po file (line %s): %s' % \
-                (linenum, e))
+        except Exception, exc:
+            raise IOError('Syntax error in po file (line %s)' % linenum)
 
     # state handlers
 
@@ -1180,7 +1176,7 @@ class _POFileParser(object):
     def handle_tc(self):
         """Handle a translator comment."""
         if self.current_state in ['MC', 'MS', 'MX']:
-            _listappend(self.instance, self.current_entry)
+            self.instance.append(self.current_entry)
             self.current_entry = POEntry()
         if self.current_entry.tcomment != '':
             self.current_entry.tcomment += '\n'
@@ -1190,7 +1186,7 @@ class _POFileParser(object):
     def handle_gc(self):
         """Handle a generated comment."""
         if self.current_state in ['MC', 'MS', 'MX']:
-            _listappend(self.instance, self.current_entry)
+            self.instance.append(self.current_entry)
             self.current_entry = POEntry()
         if self.current_entry.comment != '':
             self.current_entry.comment += '\n'
@@ -1200,72 +1196,81 @@ class _POFileParser(object):
     def handle_oc(self):
         """Handle a file:num occurence."""
         if self.current_state in ['MC', 'MS', 'MX']:
-            _listappend(self.instance, self.current_entry)
+            self.instance.append(self.current_entry)
             self.current_entry = POEntry()
-        occurrences = _strsplit(self.current_token[3:])
+        occurrences = self.current_token[3:].split()
         for occurrence in occurrences:
             if occurrence != '':
-                fil, line = _strsplit(occurrence, ':')
-                _listappend(self.current_entry.occurrences, (fil, line))
+                try:
+                    fil, line = occurrence.split(':')
+                    if not line.isdigit():
+                        fil  = fil + line
+                        line = ''
+                    self.current_entry.occurrences.append((fil, line))
+                except:
+                    self.current_entry.occurrences.append((occurrence, ''))
         return True
 
     def handle_fl(self):
         """Handle a flags line."""
         if self.current_state in ['MC', 'MS', 'MX']:
-            _listappend(self.instance, self.current_entry)
+            self.instance.append(self.current_entry)
             self.current_entry = POEntry()
-        self.current_entry.flags += _strsplit(self.current_token[3:], ', ')
+        self.current_entry.flags += self.current_token[3:].split(', ')
         return True
 
     def handle_mi(self):
         """Handle a msgid."""
         if self.current_state in ['MC', 'MS', 'MX']:
-            _listappend(self.instance, self.current_entry)
+            self.instance.append(self.current_entry)
             self.current_entry = POEntry()
         self.current_entry.obsolete = self.entry_obsolete
-        self.current_entry.msgid = unquote(self.current_token[7:-1])
+        self.current_entry.msgid = unescape(self.current_token[7:-1])
         return True
 
     def handle_mp(self):
         """Handle a msgid plural."""
-        self.current_entry.msgid_plural = unquote(self.current_token[14:-1])
+        self.current_entry.msgid_plural = unescape(self.current_token[14:-1])
         return True
 
     def handle_ms(self):
         """Handle a msgstr."""
-        self.current_entry.msgstr = unquote(self.current_token[8:-1])
+        self.current_entry.msgstr = unescape(self.current_token[8:-1])
         return True
 
     def handle_mx(self):
         """Handle a msgstr plural."""
         index, value = self.current_token[7], self.current_token[11:-1]
-        self.current_entry.msgstr_plural[index] = unquote(value)
+        self.current_entry.msgstr_plural[index] = unescape(value)
         self.msgstr_index = index
         return True
 
     def handle_mc(self):
         """Handle a msgid or msgstr continuation line."""
         if self.current_state == 'MI':
-            self.current_entry.msgid += unquote(self.current_token[1:-1])
+            self.current_entry.msgid += unescape(self.current_token[1:-1])
         elif self.current_state == 'MP':
             self.current_entry.msgid_plural += \
-                unquote(self.current_token[1:-1])
+                unescape(self.current_token[1:-1])
         elif self.current_state == 'MS':
-            self.current_entry.msgstr += unquote(self.current_token[1:-1])
+            self.current_entry.msgstr += unescape(self.current_token[1:-1])
         elif self.current_state == 'MX':
             msgstr = self.current_entry.msgstr_plural[self.msgstr_index] +\
-                unquote(self.current_token[1:-1])
+                unescape(self.current_token[1:-1])
             self.current_entry.msgstr_plural[self.msgstr_index] = msgstr
         # don't change the current state
         return False
-    # }}}
 
+# }}}
+# class _MOFileParser {{{
 
 class _MOFileParser(object):
     """
     A class to parse binary mo files.
     """
-    # class _MOFileParser {{{
+    BIG_ENDIAN    = 0xde120495
+    LITTLE_ENDIAN = 0x950412de
+
     def __init__(self, fpath):
         """_MOFileParser constructor."""
         self.fhandle = open(fpath, 'rb')
@@ -1275,36 +1280,34 @@ class _MOFileParser(object):
         """
         Parse the magic number and raise an exception if not valid.
         """
-        magic_number = self._readbinary(fmt='4s')
-        # magic number must be 0xde120495 or 0x950412de
-        if magic_number not in ['\xde\x12\x04\x95', '\x95\x04\x12\xde']:
-            raise IOError('Invalid mo file, magic number is incorrect !')
-        self.instance.magic_number = magic_number
 
     def parse(self):
         """
         Build the instance with the file handle provided in the
         constructor.
         """
-        self.parse_magicnumber()
-        # parse the version number
-        self.instance.version = self._readbinary('L')
-        # parse the number of strings
-        numofstrings = self._readbinary('L')
-        # original strings hash table offset
-        msgids_hash_offset = self._readbinary('L')
-        # translation strings hash table offset
-        msgstrs_hash_offset = self._readbinary('P')
+        magic_number = self._readbinary('<I', 4)
+        if magic_number == self.LITTLE_ENDIAN:
+            ii = '<II'
+        elif magic_number == self.BIG_ENDIAN:
+            ii = '>II'
+        else:
+            raise IOError('Invalid mo file, magic number is incorrect !')
+        self.instance.magic_number = magic_number
+        # parse the version number and the number of strings
+        self.instance.version, numofstrings = self._readbinary(ii, 8)
+        # original strings and translation strings hash table offset
+        msgids_hash_offset, msgstrs_hash_offset = self._readbinary(ii, 8)
         # move to msgid hash table and read length and offset of msgids
         self.fhandle.seek(msgids_hash_offset)
         msgids_index = []
         for i in range(numofstrings):
-            _listappend(msgids_index, self._readbinary('LL'))
+            msgids_index.append(self._readbinary(ii, 8))
         # move to msgstr hash table and read length and offset of msgstrs
         self.fhandle.seek(msgstrs_hash_offset)
         msgstrs_index = []
         for i in range(numofstrings):
-            _listappend(msgstrs_index, self._readbinary('LL'))
+            msgstrs_index.append(self._readbinary(ii, 8))
         # build entries
         for i in range(numofstrings):
             self.fhandle.seek(msgids_index[i][1])
@@ -1312,35 +1315,35 @@ class _MOFileParser(object):
             self.fhandle.seek(msgstrs_index[i][1])
             msgstr = self.fhandle.read(msgstrs_index[i][0])
             if i == 0: # metadata
-                raw_metadata, metadata = _strsplit(msgstr, '\n'), {}
+                raw_metadata, metadata = msgstr.split('\n'), {}
                 for line in raw_metadata:
-                    tokens = _strsplit(line, ':', 1)
+                    tokens = line.split(':', 1)
                     if tokens[0] != '':
                         try:
-                            metadata[tokens[0]] = _strstrip(tokens[1])
+                            metadata[tokens[0]] = tokens[1].strip()
                         except IndexError:
                             metadata[tokens[0]] = ''
                 self.instance.metadata = metadata
                 continue
             entry = MOEntry(msgid=msgid, msgstr=msgstr)
-            _listappend(self.instance, entry)
+            self.instance.append(entry)
         # close opened file
         self.fhandle.close()
         return self.instance
 
-    def _readbinary(self, fmt='c'):
+    def _readbinary(self, fmt, numbytes):
         """
         Private method that unpack n bytes of data using format <fmt>.
         It returns a tuple or a mixed value if the tuple length is 1.
         """
-        numbytes = struct.calcsize(fmt)
         bytes = self.fhandle.read(numbytes)
         tup = struct.unpack(fmt, bytes)
         if len(tup) == 1:
             return tup[0]
         return tup
-    # }}}
 
+# }}}
+# __main__ {{{
 
 if __name__ == '__main__':
     """
@@ -1348,7 +1351,6 @@ if __name__ == '__main__':
       - to **test** the module just run: *python polib.py [-v]*
       - to **profile** the module: *python polib.py -p <some_pofile.po>*
     """
-    # main function {{{
     import sys
     if len(sys.argv) > 2 and sys.argv[1] == '-p':
         def test(f):
@@ -1362,5 +1364,5 @@ if __name__ == '__main__':
     else:
         import doctest
         doctest.testmod()
-    # }}}
 
+# }}}
