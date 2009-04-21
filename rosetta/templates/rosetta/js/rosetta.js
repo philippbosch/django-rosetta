@@ -20,4 +20,11 @@ google.setOnLoadCallback(function() {
         return false;
     });
 {% endif %}
+    $('td.plural').each(function(i) {
+        var td = $(this), trY = parseInt(td.closest('tr').offset().top);
+        $('textarea', $(this).closest('tr')).each(function(j) {
+            var textareaY=  parseInt($(this).offset().top) - trY;
+            $($('.part',td).get(j)).css('top',textareaY + 'px');
+        });
+    });
 });

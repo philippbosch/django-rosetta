@@ -51,8 +51,10 @@
                     <tr class="{% cycle row1,row2 %}">
                         {% if message.msgid_plural %}
                             <td class="original plural">
-                                <span class="part">{{message.msgid|format_message|linebreaksbr}}</span>
-                                <span class="part">{{message.msgid_plural|format_message|linebreaksbr}}</span>
+                                <div class="plural-container">
+                                    <span class="part">{{message.msgid|format_message|linebreaksbr}}</span>
+                                    <span class="part">{{message.msgid_plural|format_message|linebreaksbr}}</span>
+                                </div>
                             </td>
                             <td class="translation">
                                 {% for k, msgstr in message.msgstr_plural.items|dictsort:"0"  %}
