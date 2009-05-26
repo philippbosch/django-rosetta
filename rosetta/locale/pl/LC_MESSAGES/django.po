@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Rosetta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-22 10:18+0200\n"
+"POT-Creation-Date: 2009-05-26 13:20+0200\n"
 "PO-Revision-Date: 2008-09-12 12:16\n"
 "Last-Translator: <tomasz@napierala.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,19 +36,23 @@ msgstr "Komunikaty"
 msgid "Translated"
 msgstr "Przetłumaczone"
 
-#: templates/rosetta/languages.html:17
+#: templates/rosetta/languages.html:17 templates/rosetta/pofile.html:47
+msgid "Fuzzy"
+msgstr ""
+
+#: templates/rosetta/languages.html:18
 msgid "Obsolete"
 msgstr "Przestarzałe"
 
-#: templates/rosetta/languages.html:18
+#: templates/rosetta/languages.html:19
 msgid "Progress"
 msgstr "Postęp"
 
-#: templates/rosetta/languages.html:37
+#: templates/rosetta/languages.html:39
 msgid "Nothing to translate!"
 msgstr "Nie ma nic do przetłumaczenia!"
 
-#: templates/rosetta/languages.html:38
+#: templates/rosetta/languages.html:40
 msgid ""
 "You haven't specified any languages in your settings file, or haven't yet "
 "generated a batch of translation catalogs."
@@ -56,15 +60,16 @@ msgstr ""
 "Nie podałeś żadnych języków w plikach ustawień, lub nie wygenerowałeś "
 "jeszcze katalogów do tłumaczeń."
 
-#: templates/rosetta/languages.html:39
 # python-format
+#: templates/rosetta/languages.html:41
+#, python-format
 msgid ""
 "Please refer to <a href=\"%(i18n_doc_link)s\">Django's I18N documentation</"
 "a> for a guide on how to set up internationalization for your project."
 msgstr ""
-"Sprawdź pomoc dotyczącą <a href=\"%(i18n_doc_link)s\">internacjonalizacji Django "
-"I18N </a>, aby znaleźć dokumentację na "
-"temat internacjonalizacji twojego projektu."
+"Sprawdź pomoc dotyczącą <a href=\"%(i18n_doc_link)s\">internacjonalizacji "
+"Django I18N </a>, aby znaleźć dokumentację na temat internacjonalizacji "
+"twojego projektu."
 
 #: templates/rosetta/pofile.html:7
 msgid "Pick another file"
@@ -82,7 +87,7 @@ msgstr "Postęp: %(percent_translated)s %"
 msgid "File is read-only: download the file when done editing!"
 msgstr "Plik jest tylko do odczytu: pobierz go kiedy skończysz edytować"
 
-#: templates/rosetta/pofile.html:19 templates/rosetta/pofile.html.py:44
+#: templates/rosetta/pofile.html:19 templates/rosetta/pofile.html.py:45
 msgid "English"
 msgstr "Angielski"
 
@@ -104,47 +109,54 @@ msgid "Translated only"
 msgstr "Tylko przetłumaczone"
 
 #: templates/rosetta/pofile.html:27
-msgid "Both"
-msgstr "Oba"
+msgid "Fuzzy only"
+msgstr ""
 
-#: templates/rosetta/pofile.html:33
+#: templates/rosetta/pofile.html:28
+msgid "All"
+msgstr ""
+
+#: templates/rosetta/pofile.html:34
 msgid "Search"
 msgstr "Szukaj"
 
-#: templates/rosetta/pofile.html:35
+#: templates/rosetta/pofile.html:36
 msgid "Go"
 msgstr "Idź"
 
-#: templates/rosetta/pofile.html:46
+#: templates/rosetta/pofile.html:48
 msgid "Occurrences(s)"
 msgstr "Wystąpienie(a)"
 
-#: templates/rosetta/pofile.html:67
+#: templates/rosetta/pofile.html:71
 msgid "suggest"
 msgstr "sugeruj"
 
-#: templates/rosetta/pofile.html:75
+#: templates/rosetta/pofile.html:82
 #, python-format
 msgid "%(more_count)s more"
 msgid_plural "%(more_count)s more"
 msgstr[0] "%(more_count)s więcej"
 msgstr[1] "%(more_count)s więcej"
 
-#: templates/rosetta/pofile.html:87
+#: templates/rosetta/pofile.html:94
 msgid "Save and translate next block"
 msgstr "Zapisz i tłumacz następny blok"
 
-#: templates/rosetta/pofile.html:91
+#: templates/rosetta/pofile.html:98
 msgid "Skip to page:"
 msgstr "Przejdź do strony:"
 
-#: templates/rosetta/pofile.html:104
+#: templates/rosetta/pofile.html:111
 msgid "Displaying:"
 msgstr "Wyświetlanie:"
 
-#: templates/rosetta/pofile.html:106
+#: templates/rosetta/pofile.html:113
 #, python-format
 msgid "%(hits)s/%(message_number)s message"
 msgid_plural "%(hits)s/%(message_number)s messages"
 msgstr[0] "%(hits)s/%(message_number)s komunikat"
 msgstr[1] "%(hits)s/%(message_number)s komunikatów"
+
+#~ msgid "Both"
+#~ msgstr "Oba"

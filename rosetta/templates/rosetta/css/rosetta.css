@@ -17,6 +17,7 @@ p.paginator span.space { margin: 0 0.5em;}
 .paginator {text-align:left; border:none; background:transparent; }
 .paginator strong { margin-left:1em;}
 th.r,td.r {text-align:right;}
+th.c,td.c {text-align: center;}
 td.original code {font-size:90%; padding: 0 1px; }
 tr.row2 td.original code {background-color:#ffc; padding: 0 0.3em;}
 tr.row1 td.original code {background-color:#ccf;}

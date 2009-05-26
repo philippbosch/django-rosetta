@@ -47,14 +47,14 @@ def home(request):
         rosetta_i18n_write = request.session.get('rosetta_i18n_write', True)
         
         if 'filter' in request.GET:
-            if request.GET.get('filter') == 'untranslated' or request.GET.get('filter') == 'translated' or request.GET.get('filter') == 'both':
+            if request.GET.get('filter') in ('untranslated', 'translated', 'fuzzy', 'all'):
                 filter_ = request.GET.get('filter')
                 request.session['rosetta_i18n_filter'] = filter_
                 return HttpResponseRedirect(reverse('rosetta-home'))
         elif 'rosetta_i18n_filter' in request.session:
             rosetta_i18n_filter = request.session.get('rosetta_i18n_filter')
         else:
-            rosetta_i18n_filter = 'both'
+            rosetta_i18n_filter = 'all'
                 
         if '_next' in request.POST:
             rx=re.compile(r'^m_([0-9]+)')
@@ -70,10 +70,12 @@ def home(request):
                     id=int(rx.match(k).groups()[0])
                     rosetta_i18n_pofile[id].msgstr = fix_nls(rosetta_i18n_pofile[id].msgid, request.POST.get(k))
                     file_change = True
-                if file_change and 'fuzzy' in rosetta_i18n_pofile[id].flags:
-                    rosetta_i18n_pofile[id].flags.remove('fuzzy')
                     
-                        
+                if file_change and 'fuzzy' in rosetta_i18n_pofile[id].flags and not request.POST.get('f_%d' %id, False):
+                    rosetta_i18n_pofile[id].flags.remove('fuzzy')
+                elif file_change and 'fuzzy' not in rosetta_i18n_pofile[id].flags and request.POST.get('f_%d' %id, False):
+                    rosetta_i18n_pofile[id].flags.append('fuzzy')
+                    
             if file_change and rosetta_i18n_write:
                 try:
                     rosetta_i18n_pofile.metadata['Last-Translator'] = str(u"%s %s <%s>" %(request.user.first_name,request.user.last_name,request.user.email))
@@ -124,12 +126,14 @@ def home(request):
             rx=re.compile(query, re.IGNORECASE)
             paginator = Paginator([e for e in rosetta_i18n_pofile if rx.search(smart_unicode(e.msgstr)+smart_unicode(e.msgid)+u''.join([o[0] for o in e.occurrences]))], rosetta_settings.MESSAGES_PER_PAGE)
         else:
-            if rosetta_i18n_filter == 'both':
+            if rosetta_i18n_filter == 'all':
                 paginator = Paginator(rosetta_i18n_pofile, rosetta_settings.MESSAGES_PER_PAGE)
             elif rosetta_i18n_filter == 'untranslated':
                 paginator = Paginator(rosetta_i18n_pofile.untranslated_entries(), rosetta_settings.MESSAGES_PER_PAGE)
             elif rosetta_i18n_filter == 'translated':
                 paginator = Paginator(rosetta_i18n_pofile.translated_entries(), rosetta_settings.MESSAGES_PER_PAGE)
+            elif rosetta_i18n_filter == 'fuzzy':
+                paginator = Paginator(rosetta_i18n_pofile.fuzzy_entries(), rosetta_settings.MESSAGES_PER_PAGE)
         
         if 'page' in request.GET and int(request.GET.get('page')) <= paginator.num_pages and int(request.GET.get('page')) > 0:
             page = int(request.GET.get('page'))
@@ -209,7 +213,7 @@ def list_languages(request):
     do_rosetta = 'rosetta' in request.GET
     has_pos = False
     for language in settings.LANGUAGES:
-        pos = find_pos(language[0],include_djangos=do_django,include_rosetta=do_rosetta)
+        pos = find_pos(language[0],include_djangos=do_django,include_rosetta=do_rosetta)        
         has_pos = has_pos or len(pos)
         languages.append(
             (language[0], 

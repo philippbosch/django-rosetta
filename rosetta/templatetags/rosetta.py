@@ -33,3 +33,8 @@ def gt(a,b):
     except:
         return False
 gt=register.filter(gt)
+
+
+def is_fuzzy(message):
+    return message and hasattr(message, 'flags') and 'fuzzy' in message.flags
+is_fuzzy = register.filter(is_fuzzy)

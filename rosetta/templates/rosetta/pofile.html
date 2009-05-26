@@ -24,7 +24,8 @@
         <li class="nobubble">{% trans "Display:" %}</li>
         <li {% ifequal rosetta_i18n_filter 'untranslated' %}class="active"{% endifequal %}><a href="?filter=untranslated">{% trans "Untranslated only" %}</a></li>
         <li {% ifequal rosetta_i18n_filter 'translated' %}class="active"{% endifequal %}><a href="?filter=translated">{% trans "Translated only" %}</a></li>
-        <li {% ifequal rosetta_i18n_filter 'both' %}class="active"{% endifequal %}><a href="?filter=both">{% trans "Both" %}</a></li>
+        <li {% ifequal rosetta_i18n_filter 'fuzzy' %}class="active"{% endifequal %}><a href="?filter=fuzzy">{% trans "Fuzzy only" %}</a></li>
+        <li {% ifequal rosetta_i18n_filter 'all' %}class="active"{% endifequal %}><a href="?filter=all">{% trans "All" %}</a></li>
     </ul>
     <div id="changelist" class="module{% if rosetta_i18n_lang_bidi %} rtl{% endif %}">
         <div id="toolbar">
@@ -43,6 +44,7 @@
                     <tr>
                         <th>{% trans "English" %}</th>
                         <th>{{ rosetta_i18n_lang_name }}</th>
+                        <th class="c">{% trans "Fuzzy" %}</th>
                         <th>{% trans "Occurrences(s)" %}</th>
                     </tr>
                 </thead>
@@ -69,6 +71,9 @@
                                 {% if ENABLE_TRANSLATION_SUGGESTIONS %}<a href="#" class="suggest">{% trans "suggest" %}</a>{% endif %}
                             </td>
                         {% endif %}
+                            <td class="c">
+                                <input type="checkbox" name="f_{{message.id}}" value="1" {% if message|is_fuzzy %}checked="checked"{% endif %} />
+                            </td>
                             <td class="location">
                                 {% for fn,lineno in message.occurrences %}
                                     <code{% if forloop.counter|gt:"3" %} class="hide"{% endif %}>{{ fn }}:{{lineno}}</code> 

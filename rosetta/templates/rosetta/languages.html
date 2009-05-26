@@ -12,8 +12,9 @@
                 <thead>
                     <tr>
                         <th>{% trans "File" %}</th>
-                        <th class="r">{% trans "Messages" %}</th>                        
+                        <th class="r">{% trans "Messages" %}</th>
                         <th class="r">{% trans "Translated" %}</th>
+                        <th class="r">{% trans "Fuzzy"%}</th>
                         <th class="r">{% trans "Obsolete"%}</th>
                         <th class="r">{% trans "Progress"%}</th>
                     </tr>
@@ -24,6 +25,7 @@
                         <td><a href="{% url rosetta-language-selection lid,forloop.counter0 %}{% if do_django %}?django{% endif %}{% if do_rosetta %}?rosetta{% endif %}">{{ path }}</a></td>
                         <td class="r">{{po|length}}</td>
                         <td class="r">{{po.translated_entries|length}}</td>
+                        <td class="r">{{po.fuzzy_entries|length}}</td>
                         <td class="r">{{po.obsolete_entries|length}}</td>
                         <td class="r">{{po.percent_translated|floatformat:2}}%</td>
                     </tr>
