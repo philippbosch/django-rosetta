@@ -159,7 +159,8 @@ home=never_cache(home)
 
 
 def download_file(request):
-    import zipfile, tempfile, os
+    import zipfile, os
+    from StringIO import StringIO
     # original filename
     rosetta_i18n_fn=request.session.get('rosetta_i18n_fn', None)
     # in-session modified catalog
@@ -174,30 +175,22 @@ def download_file(request):
             offered_fn = '_'.join(rosetta_i18n_fn.split('/')[-5:])
         else:
             offered_fn = rosetta_i18n_fn.split('/')[-1]
-        # filenames
-        tmpdir=tempfile.gettempdir()
-        zip_fn = str(os.path.join(tmpdir,'%s.%s.zip' %(offered_fn,rosetta_i18n_lang_code)))
-        po_fn = str(os.path.join(tmpdir, rosetta_i18n_fn.split('/')[-1]))
+        po_fn = str(rosetta_i18n_fn.split('/')[-1])
         mo_fn = str(po_fn.replace('.po','.mo')) # not so smart, huh
-        rosetta_i18n_pofile.save(po_fn)
-        rosetta_i18n_pofile.save_as_mofile(mo_fn)
-        zf = zipfile.ZipFile(zip_fn,'w')
-        zf.write(po_fn, str(po_fn.split('/')[-1]))
-        zf.write(mo_fn, str(mo_fn.split('/')[-1]))
-        zf.close()
+        zipdata = StringIO()
+        zipf = zipfile.ZipFile(zipdata, mode="w")
+        zipf.writestr(po_fn, str(rosetta_i18n_pofile))
+        zipf.writestr(mo_fn, rosetta_i18n_pofile.to_binary())
+        zipf.close()
+        zipdata.seek(0)
         
-        response = HttpResponse(file(zip_fn).read())
+        response = HttpResponse(zipdata.read())
         response['Content-Disposition'] = 'attachment; filename=%s.%s.zip' %(offered_fn,rosetta_i18n_lang_code)
         response['Content-Type'] = 'application/x-zip'
-    
-        os.unlink(zip_fn)
-        os.unlink(po_fn)
-        os.unlink(mo_fn)
-
         return response
     except Exception, e:
         return HttpResponseRedirect(reverse('rosetta-home'))
-        #return HttpResponse(e, mimetype="text/plain")
+        
 download_file=user_passes_test(lambda user:can_translate(user),'/admin/')(download_file)
 download_file=never_cache(download_file)
         
