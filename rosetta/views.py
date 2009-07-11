@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import Paginator, InvalidPage
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, resolve, Resolver404
 from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
 from django.utils.encoding import smart_unicode, force_unicode
@@ -12,6 +12,18 @@ from rosetta.poutil import find_pos, pagination_range
 from rosetta.conf import settings as rosetta_settings
 import re, os, rosetta, datetime
 
+try:
+    resolve(settings.LOGIN_URL)
+except Resolver404:
+    try:
+        resolve('/admin/')
+    except Resolver404:
+        raise Exception('Rosetta cannot log you in!\nYou must define a LOGIN_URL in your settings if you don\'t run the Django admin site at a standard URL.')
+    else:
+        LOGIN_URL = '/admin/'
+else:
+    LOGIN_URL = settings.LOGIN_URL
+        
 
 def home(request):
     """
@@ -154,7 +166,7 @@ def home(request):
         
     else:
         return list_languages(request)
-home=user_passes_test(lambda user:can_translate(user),'/admin/')(home)
+home=user_passes_test(lambda user:can_translate(user),LOGIN_URL)(home)
 home=never_cache(home)
 
 
@@ -191,7 +203,7 @@ def download_file(request):
     except Exception, e:
         return HttpResponseRedirect(reverse('rosetta-home'))
         
-download_file=user_passes_test(lambda user:can_translate(user),'/admin/')(download_file)
+download_file=user_passes_test(lambda user:can_translate(user),LOGIN_URL)(download_file)
 download_file=never_cache(download_file)
         
 
@@ -217,7 +229,7 @@ def list_languages(request):
     ADMIN_MEDIA_PREFIX = settings.ADMIN_MEDIA_PREFIX
     version = rosetta.get_version(True)
     return render_to_response('rosetta/languages.html', locals())    
-list_languages=user_passes_test(lambda user:can_translate(user),'/admin/')(list_languages)
+list_languages=user_passes_test(lambda user:can_translate(user),LOGIN_URL)(list_languages)
 list_languages=never_cache(list_languages)
 
 def lang_sel(request,langid,idx):
@@ -248,7 +260,7 @@ def lang_sel(request,langid,idx):
             request.session['rosetta_i18n_write'] = False
             
         return HttpResponseRedirect(reverse('rosetta-home'))
-lang_sel=user_passes_test(lambda user:can_translate(user),'/admin/')(lang_sel)
+lang_sel=user_passes_test(lambda user:can_translate(user),LOGIN_URL)(lang_sel)
 lang_sel=never_cache(lang_sel)
 
 def can_translate(user):
