@@ -4,7 +4,7 @@ from django.core.paginator import Paginator, InvalidPage
 from django.core.urlresolvers import reverse, resolve, Resolver404
 from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
-from django.utils.encoding import smart_unicode, force_unicode
+from django.utils.encoding import smart_unicode, force_unicode, iri_to_uri
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.cache import never_cache
 from rosetta.polib import pofile
@@ -90,6 +90,7 @@ def home(request):
                     rosetta_i18n_pofile[id].flags.append('fuzzy')
                     
             if file_change and rosetta_i18n_write:
+                
                 try:
                     rosetta_i18n_pofile.metadata['Last-Translator'] = u"%s %s <%s>" %(request.user.first_name,request.user.last_name,request.user.email)
                     rosetta_i18n_pofile.metadata['X-Translated-Using'] = u"django-rosetta %s" % rosetta.get_version(False)
@@ -128,7 +129,7 @@ def home(request):
                     query_arg = query_arg + 'page=%d' % int(request.GET.get('page'))
                     
                     
-                return HttpResponseRedirect(reverse('rosetta-home') + query_arg)
+                return HttpResponseRedirect(reverse('rosetta-home') + iri_to_uri(query_arg))
                 
                 
         rosetta_i18n_lang_name = _(request.session.get('rosetta_i18n_lang_name'))
