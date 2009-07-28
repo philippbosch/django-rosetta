@@ -7,6 +7,9 @@ MESSAGES_PER_PAGE = getattr(settings,'ROSETTA_MESSAGES_PER_PAGE',10)
 # Enable Google translation suggestions
 ENABLE_TRANSLATION_SUGGESTIONS = getattr(settings,'ROSETTA_ENABLE_TRANSLATION_SUGGESTIONS',True)
 
+# Displays this language beside the original MSGID in the admin
+MAIN_LANGUAGE = getattr(settings,'ROSETTA_MAIN_LANGUAGE', None)
+
 
 """
 When running WSGI daemon mode, using mod_wsgi 2.0c5 or later, this setting 

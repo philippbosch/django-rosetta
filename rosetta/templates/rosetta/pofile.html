@@ -12,7 +12,7 @@
 {% block breadcumbs %}
     <a href="{% url rosetta-pick-file %}">{% trans "Home" %}</a> &rsaquo; 
     {{ rosetta_i18n_lang_name }} &rsaquo; 
-    {{ rosetta_i18n_fn }} &rsaquo; 
+    {{ rosetta_i18n_app|title }} &rsaquo; 
     {% blocktrans with rosetta_i18n_pofile.percent_translated|floatformat:2 as percent_translated  %}Progress: {{ percent_translated }}%{% endblocktrans %}
     {% if not rosetta_i18n_write %}<span class="alert">{% trans "File is read-only: download the file when done editing!" %}</span>{% endif %}
 {% endblock %}
@@ -42,7 +42,8 @@
             <table>
                 <thead>
                     <tr>
-                        <th>{% trans "English" %}</th>
+                        <th>{% trans "Original" %}</th>
+                        {% if main_language %}<th>{{ main_language }}</th>{% endif %}
                         <th>{{ rosetta_i18n_lang_name }}</th>
                         <th class="c">{% trans "Fuzzy" %}</th>
                         <th>{% trans "Occurrences(s)" %}</th>
@@ -66,6 +67,7 @@
                             </td>
                         {% else %}
                             <td class="original">{{ message.msgid|format_message|linebreaksbr }}</td>
+                            {% if main_language %}<td class="original">{{ message.main_lang|format_message|linebreaksbr }}</td>{% endif %}
                             <td class="translation">
                                 <textarea rows="{{message.msgid|format_message|lines_count}}" cols="40" name="m_{{message.id}}">{{message.msgstr}}</textarea>
                                 {% if ENABLE_TRANSLATION_SUGGESTIONS %}<a href="#" class="suggest">{% trans "suggest" %}</a>{% endif %}

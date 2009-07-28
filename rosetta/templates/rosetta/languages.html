@@ -11,23 +11,25 @@
             <table cellspacing="0">
                 <thead>
                     <tr>
-                        <th>{% trans "File" %}</th>
+                        <th>{% trans "Application" %}</th>
+                        <th class="r">{% trans "Progress"%}</th>
                         <th class="r">{% trans "Messages" %}</th>
                         <th class="r">{% trans "Translated" %}</th>
                         <th class="r">{% trans "Fuzzy"%}</th>
                         <th class="r">{% trans "Obsolete"%}</th>
-                        <th class="r">{% trans "Progress"%}</th>
+                        <th>{% trans "File" %}</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for path,po in pos %}
+                    {% for app,path,po in pos %}
                     <tr class="{% cycle row1,row2 %}">
-                        <td><a href="{% url rosetta-language-selection lid,forloop.counter0 %}{% if do_django %}?django{% endif %}{% if do_rosetta %}?rosetta{% endif %}">{{ path }}</a></td>
+                        <td><a href="{% url rosetta-language-selection lid,forloop.counter0 %}{% if do_django %}?django{% endif %}{% if do_rosetta %}?rosetta{% endif %}">{{ app|title }}</a></td>
+                        <td class="r">{{po.percent_translated|floatformat:2}}%</td>
                         <td class="r">{{po|length}}</td>
                         <td class="r">{{po.translated_entries|length}}</td>
                         <td class="r">{{po.fuzzy_entries|length}}</td>
                         <td class="r">{{po.obsolete_entries|length}}</td>
-                        <td class="r">{{po.percent_translated|floatformat:2}}%</td>
+                        <td class="hint">{{ path }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

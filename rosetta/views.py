@@ -53,6 +53,7 @@ def home(request):
     version = rosetta.get_version(True)
     if 'rosetta_i18n_fn' in request.session:
         rosetta_i18n_fn=request.session.get('rosetta_i18n_fn')
+        rosetta_i18n_app = get_app_name(rosetta_i18n_fn)
         rosetta_i18n_pofile = request.session.get('rosetta_i18n_pofile')
         rosetta_i18n_lang_code = request.session['rosetta_i18n_lang_code']
         rosetta_i18n_lang_bidi = (rosetta_i18n_lang_code in settings.LANGUAGES_BIDI)
@@ -90,8 +91,8 @@ def home(request):
                     
             if file_change and rosetta_i18n_write:
                 try:
-                    rosetta_i18n_pofile.metadata['Last-Translator'] = str(u"%s %s <%s>" %(request.user.first_name,request.user.last_name,request.user.email))
-                    rosetta_i18n_pofile.metadata['X-Translated-Using'] = str(u"django-rosetta %s" % rosetta.get_version(False))
+                    rosetta_i18n_pofile.metadata['Last-Translator'] = u"%s %s <%s>" %(request.user.first_name,request.user.last_name,request.user.email)
+                    rosetta_i18n_pofile.metadata['X-Translated-Using'] = u"django-rosetta %s" % rosetta.get_version(False)
                     rosetta_i18n_pofile.metadata['PO-Revision-Date'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M%z')
                 except UnicodeDecodeError:
                     pass
@@ -152,6 +153,21 @@ def home(request):
         else:
             page = 1
         messages = paginator.page(page).object_list
+        if rosetta_settings.MAIN_LANGUAGE and rosetta_settings.MAIN_LANGUAGE != rosetta_i18n_lang_code:
+
+            main_language = None
+            for language in settings.LANGUAGES:
+                if language[0] == rosetta_settings.MAIN_LANGUAGE:
+                    main_language = _(language[1])
+                    break
+
+            fl = ("/%s/" % rosetta_settings.MAIN_LANGUAGE).join(rosetta_i18n_fn.split("/%s/" % rosetta_i18n_lang_code))
+            po = pofile(fl)
+
+            main_messages = []
+            for message in messages:
+                message.main_lang = po.find(message.msgid).msgstr
+                
         needs_pagination = paginator.num_pages > 1
         if needs_pagination:
             if paginator.num_pages >= 10:
@@ -223,7 +239,7 @@ def list_languages(request):
         languages.append(
             (language[0], 
             _(language[1]),
-            [(os.path.realpath(l), pofile(l)) for l in  pos],
+            [(get_app_name(l), os.path.realpath(l), pofile(l)) for l in  pos],
             )
         )
     ADMIN_MEDIA_PREFIX = settings.ADMIN_MEDIA_PREFIX
@@ -231,6 +247,10 @@ def list_languages(request):
     return render_to_response('rosetta/languages.html', locals())    
 list_languages=user_passes_test(lambda user:can_translate(user),LOGIN_URL)(list_languages)
 list_languages=never_cache(list_languages)
+
+def get_app_name(path):
+    app = path.split("/locale")[0].split("/")[-1]
+    return app
 
 def lang_sel(request,langid,idx):
     """
