@@ -141,7 +141,7 @@ def home(request):
             paginator = Paginator([e for e in rosetta_i18n_pofile if rx.search(smart_unicode(e.msgstr)+smart_unicode(e.msgid)+u''.join([o[0] for o in e.occurrences]))], rosetta_settings.MESSAGES_PER_PAGE)
         else:
             if rosetta_i18n_filter == 'all':
-                paginator = Paginator(rosetta_i18n_pofile, rosetta_settings.MESSAGES_PER_PAGE)
+                paginator = Paginator([e for e in rosetta_i18n_pofile if not e.obsolete], rosetta_settings.MESSAGES_PER_PAGE)
             elif rosetta_i18n_filter == 'untranslated':
                 paginator = Paginator(rosetta_i18n_pofile.untranslated_entries(), rosetta_settings.MESSAGES_PER_PAGE)
             elif rosetta_i18n_filter == 'translated':
