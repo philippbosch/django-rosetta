@@ -64,11 +64,9 @@ def home(request):
                 filter_ = request.GET.get('filter')
                 request.session['rosetta_i18n_filter'] = filter_
                 return HttpResponseRedirect(reverse('rosetta-home'))
-        elif 'rosetta_i18n_filter' in request.session:
-            rosetta_i18n_filter = request.session.get('rosetta_i18n_filter')
-        else:
-            rosetta_i18n_filter = 'all'
-                
+        
+        rosetta_i18n_filter = request.session.get('rosetta_i18n_filter', 'all')
+        
         if '_next' in request.POST:
             rx=re.compile(r'^m_([0-9]+)')
             rx_plural=re.compile(r'^m_([0-9]+)_([0-9]+)')
