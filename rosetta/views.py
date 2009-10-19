@@ -76,7 +76,7 @@ def home(request):
                     id=int(rx_plural.match(k).groups()[0])
                     idx=int(rx_plural.match(k).groups()[1])
                     rosetta_i18n_pofile[id].msgstr_plural[str(idx)] = fix_nls(rosetta_i18n_pofile[id].msgid_plural[idx], request.POST.get(k))
-                    file_change = True 
+                    file_change = True
                 elif rx.match(k):
                     id=int(rx.match(k).groups()[0])
                     rosetta_i18n_pofile[id].msgstr = fix_nls(rosetta_i18n_pofile[id].msgid, request.POST.get(k))
@@ -294,4 +294,3 @@ def can_translate(user):
             return translators in user.groups.all()
         except Group.DoesNotExist:
             return False
-

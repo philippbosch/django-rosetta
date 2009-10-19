@@ -14,7 +14,7 @@ google.setOnLoadCallback(function() {
                 trans.val(unescape(result.translation).replace(/&#39;/g,'\'').replace(/&quot;/g,'"').replace(/%\s+(\([^\)]+\))\s*s/g,' %$1s '));
                 a.hide();
             } else {
-                a.hide().before($('<span class="alert">'+result.error.message+'</span>'))
+                a.hide().before($('<span class="alert">'+result.error.message+'</span>'));
             }
         });
         return false;
@@ -27,4 +27,31 @@ google.setOnLoadCallback(function() {
             $($('.part',td).get(j)).css('top',textareaY + 'px');
         });
     });
+    
+    $('.translation textarea').blur(function() {
+        if($(this).val()) {
+            $('.alert', $(this).parents('tr')).remove();
+            var RX = /%(?:\([^\s\)]*\))?[sdf]/g,
+                origs=$('.original', $(this).parents('tr')).html().match(RX),
+                trads=$(this).val().match(RX),
+                error = $('<span class="alert">Unmatched variables</span>');
+            if (origs && trads) {
+                for (var i = trads.length; i--;){
+                    var key = trads[i];
+                    if (-1 == $.inArray(key, origs)) {
+                        $(this).before(error)
+                        return false;
+                    }
+                }
+                return true;
+            } else {
+                if (!(origs === null && trads === null)) {
+                    $(this).before(error);
+                    return false;                    
+                }
+            }
+            return true;
+        }
+    });
+    
 });

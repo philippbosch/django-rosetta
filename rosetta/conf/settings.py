@@ -34,3 +34,4 @@ Refs:
 
 """
 WSGI_AUTO_RELOAD = getattr(settings,'ROSETTA_WSGI_AUTO_RELOAD', False)
+
