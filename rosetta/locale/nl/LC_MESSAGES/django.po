@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Rosetta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-05-26 13:20+0200\n"
+"POT-Creation-Date: 2009-10-21 12:21+0200\n"
 "PO-Revision-Date: 2008-06-05 17:06+0200\n"
 "Last-Translator: Joost Cassee <cassee@gmail.com>\n"
 "Language-Team: Joost Cassee <cassee@gmail.com>\n"
@@ -25,34 +25,38 @@ msgid "Language selection"
 msgstr "Taalselectie"
 
 #: templates/rosetta/languages.html:14
-msgid "File"
-msgstr "Bestand"
-
-#: templates/rosetta/languages.html:15
-msgid "Messages"
-msgstr "Berichten"
-
-#: templates/rosetta/languages.html:16
-msgid "Translated"
-msgstr "Vertaald"
-
-#: templates/rosetta/languages.html:17 templates/rosetta/pofile.html:47
-msgid "Fuzzy"
+msgid "Application"
 msgstr ""
 
-#: templates/rosetta/languages.html:18
-msgid "Obsolete"
-msgstr "Niet meer gebruikt"
-
-#: templates/rosetta/languages.html:19
+#: templates/rosetta/languages.html:15
 msgid "Progress"
 msgstr "Voortgang"
 
-#: templates/rosetta/languages.html:39
+#: templates/rosetta/languages.html:16
+msgid "Messages"
+msgstr "Berichten"
+
+#: templates/rosetta/languages.html:17
+msgid "Translated"
+msgstr "Vertaald"
+
+#: templates/rosetta/languages.html:18 templates/rosetta/pofile.html:48
+msgid "Fuzzy"
+msgstr ""
+
+#: templates/rosetta/languages.html:19
+msgid "Obsolete"
+msgstr "Niet meer gebruikt"
+
+#: templates/rosetta/languages.html:20
+msgid "File"
+msgstr "Bestand"
+
+#: templates/rosetta/languages.html:41
 msgid "Nothing to translate!"
 msgstr "Niets te vertalen!"
 
-#: templates/rosetta/languages.html:40
+#: templates/rosetta/languages.html:42
 msgid ""
 "You haven't specified any languages in your settings file, or haven't yet "
 "generated a batch of translation catalogs."
@@ -61,7 +65,7 @@ msgstr ""
 "catalogus gegenereerd."
 
 # python-format
-#: templates/rosetta/languages.html:41
+#: templates/rosetta/languages.html:43
 #, python-format
 msgid ""
 "Please refer to <a href=\"%(i18n_doc_link)s\">Django's I18N documentation</"
@@ -88,7 +92,7 @@ msgstr ""
 "Dit is bestand is alleen-lezen; download dit bestand wanneer u klaar bent "
 "met bewerken!"
 
-#: templates/rosetta/pofile.html:19 templates/rosetta/pofile.html.py:45
+#: templates/rosetta/pofile.html:19
 msgid "English"
 msgstr "Engels"
 
@@ -125,34 +129,38 @@ msgstr "Zoeken"
 msgid "Go"
 msgstr "Ga"
 
-#: templates/rosetta/pofile.html:48
+#: templates/rosetta/pofile.html:45
+msgid "Original"
+msgstr ""
+
+#: templates/rosetta/pofile.html:49
 msgid "Occurrences(s)"
 msgstr "Gevonden in"
 
-#: templates/rosetta/pofile.html:71
+#: templates/rosetta/pofile.html:73
 msgid "suggest"
 msgstr ""
 
-#: templates/rosetta/pofile.html:82
+#: templates/rosetta/pofile.html:84
 #, python-format
 msgid "%(more_count)s more"
 msgid_plural "%(more_count)s more"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/rosetta/pofile.html:94
+#: templates/rosetta/pofile.html:96
 msgid "Save and translate next block"
 msgstr "Opslaan en volgende blok vertalen"
 
-#: templates/rosetta/pofile.html:98
+#: templates/rosetta/pofile.html:100
 msgid "Skip to page:"
 msgstr "Snel naar pagina:"
 
-#: templates/rosetta/pofile.html:111
+#: templates/rosetta/pofile.html:113
 msgid "Displaying:"
 msgstr "Tonen:"
 
-#: templates/rosetta/pofile.html:113
+#: templates/rosetta/pofile.html:115
 #, python-format
 msgid "%(hits)s/%(message_number)s message"
 msgid_plural "%(hits)s/%(message_number)s messages"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Rosetta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-05-26 13:20+0200\n"
+"POT-Creation-Date: 2009-10-21 12:21+0200\n"
 "Last-Translator: Nazar Leush <nazar@pleso.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -23,40 +23,44 @@ msgid "Language selection"
 msgstr "Вибір мови"
 
 #: templates/rosetta/languages.html:14
-msgid "File"
-msgstr "Файл"
-
-#: templates/rosetta/languages.html:15
-msgid "Messages"
-msgstr "Повідомлень"
-
-#: templates/rosetta/languages.html:16
-msgid "Translated"
-msgstr "Перекладено"
-
-#: templates/rosetta/languages.html:17 templates/rosetta/pofile.html:47
-msgid "Fuzzy"
+msgid "Application"
 msgstr ""
 
-#: templates/rosetta/languages.html:18
-msgid "Obsolete"
-msgstr "Застарілих"
-
-#: templates/rosetta/languages.html:19
+#: templates/rosetta/languages.html:15
 msgid "Progress"
 msgstr "Завершено"
 
-#: templates/rosetta/languages.html:39
+#: templates/rosetta/languages.html:16
+msgid "Messages"
+msgstr "Повідомлень"
+
+#: templates/rosetta/languages.html:17
+msgid "Translated"
+msgstr "Перекладено"
+
+#: templates/rosetta/languages.html:18 templates/rosetta/pofile.html:48
+msgid "Fuzzy"
+msgstr ""
+
+#: templates/rosetta/languages.html:19
+msgid "Obsolete"
+msgstr "Застарілих"
+
+#: templates/rosetta/languages.html:20
+msgid "File"
+msgstr "Файл"
+
+#: templates/rosetta/languages.html:41
 msgid "Nothing to translate!"
 msgstr ""
 
-#: templates/rosetta/languages.html:40
+#: templates/rosetta/languages.html:42
 msgid ""
 "You haven't specified any languages in your settings file, or haven't yet "
 "generated a batch of translation catalogs."
 msgstr ""
 
-#: templates/rosetta/languages.html:41
+#: templates/rosetta/languages.html:43
 #, python-format
 msgid ""
 "Please refer to <a href=\"%(i18n_doc_link)s\">Django's I18N documentation</"
@@ -79,7 +83,7 @@ msgstr "Завершено: %(percent_translated)s%"
 msgid "File is read-only: download the file when done editing!"
 msgstr "Файл тільки для читання: завантажте файл після завершення редагування!"
 
-#: templates/rosetta/pofile.html:19 templates/rosetta/pofile.html.py:45
+#: templates/rosetta/pofile.html:19
 msgid "English"
 msgstr "Англійська"
 
@@ -116,34 +120,38 @@ msgstr "Пошук"
 msgid "Go"
 msgstr "Вперед"
 
-#: templates/rosetta/pofile.html:48
+#: templates/rosetta/pofile.html:45
+msgid "Original"
+msgstr ""
+
+#: templates/rosetta/pofile.html:49
 msgid "Occurrences(s)"
 msgstr "Зустрічається в"
 
-#: templates/rosetta/pofile.html:71
+#: templates/rosetta/pofile.html:73
 msgid "suggest"
 msgstr ""
 
-#: templates/rosetta/pofile.html:82
+#: templates/rosetta/pofile.html:84
 #, python-format
 msgid "%(more_count)s more"
 msgid_plural "%(more_count)s more"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/rosetta/pofile.html:94
+#: templates/rosetta/pofile.html:96
 msgid "Save and translate next block"
 msgstr "Записати і перекласти наступний блок"
 
-#: templates/rosetta/pofile.html:98
+#: templates/rosetta/pofile.html:100
 msgid "Skip to page:"
 msgstr "Перейти до сторінки:"
 
-#: templates/rosetta/pofile.html:111
+#: templates/rosetta/pofile.html:113
 msgid "Displaying:"
 msgstr "Відображення:"
 
-#: templates/rosetta/pofile.html:113
+#: templates/rosetta/pofile.html:115
 #, python-format
 msgid "%(hits)s/%(message_number)s message"
 msgid_plural "%(hits)s/%(message_number)s messages"
