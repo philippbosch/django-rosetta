@@ -29,7 +29,7 @@
     </ul>
     <div id="changelist" class="module{% if rosetta_i18n_lang_bidi %} rtl{% endif %}">
         <div id="toolbar">
-        <form id="changelist-search" action="" method="post">
+        <form id="changelist-search" action="" method="post">{% csrf_token %}
             <div><!-- DIV needed for valid HTML -->
                 <label for="searchbar"><img src="{{ADMIN_MEDIA_PREFIX}}img/admin/icon_searchbox.png" alt="{% trans "Search" %}" /></label>
                 <input type="text" size="40" name="query" value="{% if query %}{{query}}{% endif %}" id="searchbar" />
@@ -38,7 +38,7 @@
         </form>
         </div>
         
-        <form method="post" action="">
+        <form method="post" action="">{% csrf_token %}
             <table>
                 <thead>
                     <tr>

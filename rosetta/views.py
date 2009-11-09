@@ -11,6 +11,7 @@ from rosetta.polib import pofile
 from rosetta.poutil import find_pos, pagination_range
 from rosetta.conf import settings as rosetta_settings
 import re, os, rosetta, datetime
+from django.template import RequestContext
 
 try:
     resolve(settings.LOGIN_URL)
@@ -176,7 +177,7 @@ def home(request):
         ADMIN_MEDIA_PREFIX = settings.ADMIN_MEDIA_PREFIX
         ENABLE_TRANSLATION_SUGGESTIONS = rosetta_settings.ENABLE_TRANSLATION_SUGGESTIONS
         
-        return render_to_response('rosetta/pofile.html', locals())
+        return render_to_response('rosetta/pofile.html', locals(), context_instance=RequestContext(request))
         
         
     else:
@@ -243,7 +244,7 @@ def list_languages(request):
         )
     ADMIN_MEDIA_PREFIX = settings.ADMIN_MEDIA_PREFIX
     version = rosetta.get_version(True)
-    return render_to_response('rosetta/languages.html', locals())    
+    return render_to_response('rosetta/languages.html', locals(), context_instance=RequestContext(request))    
 list_languages=user_passes_test(lambda user:can_translate(user),LOGIN_URL)(list_languages)
 list_languages=never_cache(list_languages)
 
