@@ -137,7 +137,7 @@ def home(request):
                 
         if 'query' in request.REQUEST and request.REQUEST.get('query','').strip():
             query=request.REQUEST.get('query').strip()
-            rx=re.compile(query, re.IGNORECASE)
+            rx=re.compile(re.escape(query), re.IGNORECASE)
             paginator = Paginator([e for e in rosetta_i18n_pofile if rx.search(smart_unicode(e.msgstr)+smart_unicode(e.msgid)+u''.join([o[0] for o in e.occurrences]))], rosetta_settings.MESSAGES_PER_PAGE)
         else:
             if rosetta_i18n_filter == 'untranslated':
