@@ -1,5 +1,6 @@
 {% extends "rosetta/base.html" %}
 {% load rosetta i18n %}
+
 {% block header %}
     {{block.super}}
     <div id="user-tools">
@@ -29,8 +30,9 @@
     </ul>
     <div id="changelist" class="module{% if rosetta_i18n_lang_bidi %} rtl{% endif %}">
         <div id="toolbar">
-        <form id="changelist-search" action="" method="post">{% csrf_token %}
+        <form id="changelist-search" action="" method="post">
             <div><!-- DIV needed for valid HTML -->
+                {% rosetta_csrf_token %}
                 <label for="searchbar"><img src="{{ADMIN_MEDIA_PREFIX}}img/admin/icon_searchbox.png" alt="{% trans "Search" %}" /></label>
                 <input type="text" size="40" name="query" value="{% if query %}{{query}}{% endif %}" id="searchbar" />
                 <input type="submit" name="search" value="{% trans "Go" %}" />
@@ -38,10 +40,11 @@
         </form>
         </div>
         
-        <form method="post" action="">{% csrf_token %}
+        <form method="post" action="">
             <table>
                 <thead>
                     <tr>
+                        {% rosetta_csrf_token %}
                         <th>{% trans "Original" %}</th>
                         {% if main_language %}<th>{{ main_language }}</th>{% endif %}
                         <th>{{ rosetta_i18n_lang_name }}</th>

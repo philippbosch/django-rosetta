@@ -2,6 +2,7 @@ from django import template
 from django.utils.safestring import mark_safe
 from django.utils.html import escape
 import re
+from django.template import Node
 
 register = template.Library()
 rx = re.compile(r'(%(\([^\s\)]*\))?[sd])')
@@ -38,3 +39,15 @@ gt=register.filter(gt)
 def is_fuzzy(message):
     return message and hasattr(message, 'flags') and 'fuzzy' in message.flags
 is_fuzzy = register.filter(is_fuzzy)
+
+class RosettaCsrfTokenPlaceholder(Node):
+    def render(self, context):
+        return mark_safe(u"<!-- csrf token placeholder -->")
+
+def rosetta_csrf_token(parser, token):
+    try:
+        from django.template.defaulttags import csrf_token
+        return csrf_token(parser,token)
+    except ImportError:
+        return RosettaCsrfTokenPlaceholder()
+rosetta_csrf_token=register.tag(rosetta_csrf_token)
