@@ -178,6 +178,9 @@ def home(request):
         ADMIN_MEDIA_PREFIX = settings.ADMIN_MEDIA_PREFIX
         ENABLE_TRANSLATION_SUGGESTIONS = rosetta_settings.ENABLE_TRANSLATION_SUGGESTIONS
         
+        MESSAGES_SOURCE_LANGUAGE_NAME = rosetta_settings.MESSAGES_SOURCE_LANGUAGE_NAME
+        MESSAGES_SOURCE_LANGUAGE_CODE = rosetta_settings.MESSAGES_SOURCE_LANGUAGE_CODE
+        
         return render_to_response('rosetta/pofile.html', locals(), context_instance=RequestContext(request))
         
         
