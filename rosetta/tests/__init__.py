@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
-import datetime
+import datetime, os, shutil
 from django.conf import settings
 
 class RosettaTestCase(TestCase):
@@ -36,4 +36,43 @@ class RosettaTestCase(TestCase):
         self.assertTrue ('content-type' in r._headers.keys() )
         self.assertTrue ('application/x-zip' in r._headers.get('content-type'))
     
-    
+    def test_4_DoChanges(self):
+        curdir = os.path.dirname(__file__)
+        # copy the template file
+        shutil.copy(os.path.join(curdir,'../locale/xx/LC_MESSAGES/django.po'), os.path.join(curdir,'../locale/xx/LC_MESSAGES/django.po.orig'))
+        shutil.copy(os.path.join(curdir,'./django.po.template'), os.path.join(curdir,'../locale/xx/LC_MESSAGES/django.po'))
+
+        # Load the template file
+        r = self.client.get(reverse('rosetta-language-selection', args=('xx',0,), kwargs=dict() ) +'?rosetta')
+        r = self.client.get(reverse('rosetta-home') + '?filter=untranslated')
+        r = self.client.get(reverse('rosetta-home'))
+        
+        # make sure both strings are untranslated
+        self.assertTrue('dummy language' in r.content)
+        self.assertTrue('String 1' in r.content)
+        self.assertTrue('String 2' in r.content)
+        
+        # post a translation
+        r = self.client.post(reverse('rosetta-home'), dict(m_1='Hello, world', _next='_next'))
+        
+        # reload all untranslated strings
+        r = self.client.get(reverse('rosetta-language-selection', args=('xx',0,), kwargs=dict() ) +'?rosetta')
+        r = self.client.get(reverse('rosetta-home') + '?filter=untranslated')
+        r = self.client.get(reverse('rosetta-home'))
+        
+        # the translated string no longer is up for translation
+        self.assertTrue('String 1'  in r.content)
+        self.assertTrue('String 2' not in r.content)
+        
+        # display only translated strings
+        r = self.client.get(reverse('rosetta-home') + '?filter=translated')
+        r = self.client.get(reverse('rosetta-home'))
+        
+        # The tranlsation was persisted
+        self.assertTrue('String 1' not  in r.content)
+        self.assertTrue('String 2' in r.content)
+        self.assertTrue('Hello, world' in r.content)
+        
+        # reset the original file
+        shutil.move(os.path.join(curdir,'../locale/xx/LC_MESSAGES/django.po.orig'), os.path.join(curdir,'../locale/xx/LC_MESSAGES/django.po'))
+        
