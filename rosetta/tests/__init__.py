@@ -8,6 +8,13 @@ from django.conf import settings
 
 class RosettaTestCase(TestCase):
     urls = 'rosetta.tests.urls'
+    
+    
+    def __init__(self, *args,**kwargs):
+        super(RosettaTestCase,self).__init__(*args,**kwargs)
+        self.curdir = os.path.dirname(__file__)
+        self.dest_file = os.path.join(self.curdir, '../locale/xx/LC_MESSAGES/django.po')
+
 
     def setUp(self):
         user = User.objects.create_user('test_admin', 'test@test.com', 'test_password')
@@ -37,10 +44,10 @@ class RosettaTestCase(TestCase):
         self.assertTrue ('application/x-zip' in r._headers.get('content-type'))
     
     def test_4_DoChanges(self):
-        curdir = os.path.dirname(__file__)
+        
         # copy the template file
-        shutil.copy(os.path.join(curdir,'../locale/xx/LC_MESSAGES/django.po'), os.path.join(curdir,'../locale/xx/LC_MESSAGES/django.po.orig'))
-        shutil.copy(os.path.join(curdir,'./django.po.template'), os.path.join(curdir,'../locale/xx/LC_MESSAGES/django.po'))
+        shutil.copy(self.dest_file, self.dest_file + '.orig')
+        shutil.copy(os.path.join(self.curdir,'./django.po.template'), self.dest_file)
 
         # Load the template file
         r = self.client.get(reverse('rosetta-language-selection', args=('xx',0,), kwargs=dict() ) +'?rosetta')
@@ -74,5 +81,44 @@ class RosettaTestCase(TestCase):
         self.assertTrue('Hello, world' in r.content)
         
         # reset the original file
-        shutil.move(os.path.join(curdir,'../locale/xx/LC_MESSAGES/django.po.orig'), os.path.join(curdir,'../locale/xx/LC_MESSAGES/django.po'))
+        shutil.move(self.dest_file+'.orig', self.dest_file)
+        
+
+    def test_5_TestIssue67(self):
+        # testcase for issue 67: http://code.google.com/p/django-rosetta/issues/detail?id=67
+        # copy the template file
+        shutil.copy(self.dest_file, self.dest_file + '.orig')
+        shutil.copy(os.path.join(self.curdir,'./django.po.issue67.template'), self.dest_file)
+        
+        # Make sure the plurals string is valid
+        f_ = open(self.dest_file,'rb')
+        content = f_.read()
+        f_.close()
+        self.assertTrue(u'Hello, world' not in content)
+        self.assertTrue(u'|| n%100>=20) ? 1 : 2)' in content)
+        del(content)
+        
+        # Load the template file
+        r = self.client.get(reverse('rosetta-language-selection', args=('xx',0,), kwargs=dict() ) +'?rosetta')
+        r = self.client.get(reverse('rosetta-home') + '?filter=untranslated')
+        r = self.client.get(reverse('rosetta-home'))
+        
+        # make sure all strings are untranslated
+        self.assertTrue('dummy language' in r.content)
+        self.assertTrue('String 1' in r.content)
+        self.assertTrue('String 2' in r.content)
+        
+        # post a translation
+        r = self.client.post(reverse('rosetta-home'), dict(m_1='Hello, world', _next='_next'))
+        
+        # Make sure the plurals string is still valid
+        f_ = open(self.dest_file,'rb')
+        content = f_.read()
+        f_.close()
+        self.assertTrue(u'Hello, world' in content)
+        self.assertTrue(u'|| n%100>=20) ? 1 : 2)' in content)
+        self.assertTrue(u'or n%100>=20) ? 1 : 2)' not in content)
+        del(content)
+
+        shutil.move(self.dest_file + '.orig', self.dest_file)
         
