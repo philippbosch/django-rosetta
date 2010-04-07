@@ -13,7 +13,7 @@ class RosettaTestCase(TestCase):
     def __init__(self, *args,**kwargs):
         super(RosettaTestCase,self).__init__(*args,**kwargs)
         self.curdir = os.path.dirname(__file__)
-        self.dest_file = os.path.join(self.curdir, '../locale/xx/LC_MESSAGES/django.po')
+        self.dest_file = os.path.normpath(os.path.join(self.curdir, '../locale/xx/LC_MESSAGES/django.po'))
 
 
     def setUp(self):
@@ -27,7 +27,7 @@ class RosettaTestCase(TestCase):
 
     def test_1_ListLoading(self):
         r = self.client.get(reverse('rosetta-pick-file') +'?rosetta')
-        self.assertTrue('rosetta/locale/xx/LC_MESSAGES/django.po' in r.content)
+        self.assertTrue(os.path.normpath('rosetta/locale/xx/LC_MESSAGES/django.po') in r.content)
         
         
     def test_2_PickFile(self):
@@ -47,7 +47,7 @@ class RosettaTestCase(TestCase):
         
         # copy the template file
         shutil.copy(self.dest_file, self.dest_file + '.orig')
-        shutil.copy(os.path.join(self.curdir,'./django.po.template'), self.dest_file)
+        shutil.copy(os.path.normpath(os.path.join(self.curdir,'./django.po.template')), self.dest_file)
 
         # Load the template file
         r = self.client.get(reverse('rosetta-language-selection', args=('xx',0,), kwargs=dict() ) +'?rosetta')
@@ -88,7 +88,7 @@ class RosettaTestCase(TestCase):
         # testcase for issue 67: http://code.google.com/p/django-rosetta/issues/detail?id=67
         # copy the template file
         shutil.copy(self.dest_file, self.dest_file + '.orig')
-        shutil.copy(os.path.join(self.curdir,'./django.po.issue67.template'), self.dest_file)
+        shutil.copy(os.path.normpath(os.path.join(self.curdir,'./django.po.issue67.template')), self.dest_file)
         
         # Make sure the plurals string is valid
         f_ = open(self.dest_file,'rb')
