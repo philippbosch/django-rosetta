@@ -5,6 +5,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 import datetime, os, shutil
 from django.conf import settings
+from rosetta.conf import settings as rosetta_settings
+
 
 class RosettaTestCase(TestCase):
     urls = 'rosetta.tests.urls'
@@ -122,3 +124,22 @@ class RosettaTestCase(TestCase):
 
         shutil.move(self.dest_file + '.orig', self.dest_file)
         
+
+    def test_6_ExcludedApps(self):
+        
+        rosetta_settings.EXCLUDED_APPLICATIONS = ('rosetta',)
+        
+        r = self.client.get(reverse('rosetta-pick-file') +'?rosetta')
+        self.assertTrue('rosetta/locale/xx/LC_MESSAGES/django.po' not in r.content)
+        
+        rosetta_settings.EXCLUDED_APPLICATIONS = ()
+        
+        r = self.client.get(reverse('rosetta-pick-file') +'?rosetta')
+        self.assertTrue('rosetta/locale/xx/LC_MESSAGES/django.po' in r.content)
+        
+    def test_7_selfInApplist(self):    
+        r = self.client.get(reverse('rosetta-pick-file') +'?rosetta')
+        self.assertTrue('rosetta/locale/xx/LC_MESSAGES/django.po' in r.content)
+
+        r = self.client.get(reverse('rosetta-pick-file'))
+        self.assertTrue('rosetta/locale/xx/LC_MESSAGES/django.po' not in r.content)
