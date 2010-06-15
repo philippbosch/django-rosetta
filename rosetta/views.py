@@ -211,7 +211,7 @@ def download_file(request):
         mo_fn = str(po_fn.replace('.po','.mo')) # not so smart, huh
         zipdata = StringIO()
         zipf = zipfile.ZipFile(zipdata, mode="w")
-        zipf.writestr(po_fn, str(rosetta_i18n_pofile))
+        zipf.writestr(po_fn, unicode(rosetta_i18n_pofile).encode("utf8"))
         zipf.writestr(mo_fn, rosetta_i18n_pofile.to_binary())
         zipf.close()
         zipdata.seek(0)
@@ -221,6 +221,7 @@ def download_file(request):
         response['Content-Type'] = 'application/x-zip'
         return response
     except Exception, e:
+
         return HttpResponseRedirect(reverse('rosetta-home'))
         
 download_file=user_passes_test(lambda user:can_translate(user),LOGIN_URL)(download_file)
