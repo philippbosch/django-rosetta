@@ -143,3 +143,17 @@ class RosettaTestCase(TestCase):
 
         r = self.client.get(reverse('rosetta-pick-file'))
         self.assertTrue('rosetta/locale/xx/LC_MESSAGES/django.po' not in r.content)
+
+
+    def test_8_hideObsoletes(self):
+        r = self.client.get(reverse('rosetta-language-selection', args=('xx',0,), kwargs=dict() ) +'?rosetta')
+        
+        # not in listing
+        for p in range(1,5):
+            r = self.client.get(reverse('rosetta-home') + '?page=%d'%p)
+            self.assertTrue('dummy language' in r.content)
+            self.assertTrue('Les deux' not in r.content)
+        
+        r = self.client.get(reverse('rosetta-home') + '?query=Les%20Deux')
+        self.assertTrue('dummy language' in r.content)
+        self.assertTrue('Les deux' not in r.content)
