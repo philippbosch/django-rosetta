@@ -10,7 +10,7 @@ from django.views.decorators.cache import never_cache
 from rosetta.polib import pofile
 from rosetta.poutil import find_pos, pagination_range
 from rosetta.conf import settings as rosetta_settings
-import re, os, rosetta, datetime, unicodedata
+import re, os, rosetta, datetime, unicodedata, hashlib
 from django.template import RequestContext
 
 
@@ -56,10 +56,17 @@ def home(request):
     if 'rosetta_i18n_fn' in request.session:
         rosetta_i18n_fn=request.session.get('rosetta_i18n_fn')
         rosetta_i18n_app = get_app_name(rosetta_i18n_fn)
-        rosetta_i18n_pofile = request.session.get('rosetta_i18n_pofile')
         rosetta_i18n_lang_code = request.session['rosetta_i18n_lang_code']
         rosetta_i18n_lang_bidi = rosetta_i18n_lang_code.split('-')[0] in settings.LANGUAGES_BIDI
         rosetta_i18n_write = request.session.get('rosetta_i18n_write', True)
+        if rosetta_i18n_write:
+            rosetta_i18n_pofile = pofile(rosetta_i18n_fn)
+            for entry in rosetta_i18n_pofile:
+                entry.md5hash = hashlib.md5(entry.msgid.encode("utf8")+entry.msgstr.encode("utf8")).hexdigest()
+
+        else:
+            rosetta_i18n_pofile = request.session.get('rosetta_i18n_pofile')
+
         
         if 'filter' in request.GET:
             if request.GET.get('filter') in ('untranslated', 'translated', 'fuzzy', 'all'):
@@ -70,25 +77,47 @@ def home(request):
         rosetta_i18n_filter = request.session.get('rosetta_i18n_filter', 'all')
         
         if '_next' in request.POST:
-            rx=re.compile(r'^m_([0-9]+)')
-            rx_plural=re.compile(r'^m_([0-9]+)_([0-9]+)')
+            rx = re.compile(r'^m_([0-9a-f]+)')
+            rx_plural = re.compile(r'^m_([0-9a-f]+)_([0-9]+)')
             file_change = False
-            for k in request.POST.keys():
-                if rx_plural.match(k):
-                    id=int(rx_plural.match(k).groups()[0])
-                    idx=int(rx_plural.match(k).groups()[1])
-                    rosetta_i18n_pofile[id].msgstr_plural[str(idx)] = fix_nls(rosetta_i18n_pofile[id].msgid_plural[idx], request.POST.get(k))
-                    file_change = True
-                elif rx.match(k):
-                    id=int(rx.match(k).groups()[0])
-                    rosetta_i18n_pofile[id].msgstr = fix_nls(rosetta_i18n_pofile[id].msgid, request.POST.get(k))
-                    file_change = True
-                    
-                if file_change and 'fuzzy' in rosetta_i18n_pofile[id].flags and not request.POST.get('f_%d' %id, False):
-                    rosetta_i18n_pofile[id].flags.remove('fuzzy')
-                elif file_change and 'fuzzy' not in rosetta_i18n_pofile[id].flags and request.POST.get('f_%d' %id, False):
-                    rosetta_i18n_pofile[id].flags.append('fuzzy')
-                    
+            for key, value in request.POST.items():
+                md5hash = None
+                plural_id = None
+
+                if rx_plural.match(key):
+                    md5hash = str(rx_plural.match(key).groups()[0])
+                    # polib parses .po files into unicode strings, but
+                    # doesn't bother to convert plural indexes to int,
+                    # so we need unicode here.
+                    plural_id = unicode(rx_plural.match(key).groups()[1])
+
+                elif rx.match(key):
+                    md5hash = str(rx.match(key).groups()[0])
+
+
+                if md5hash is not None:
+                    entry = rosetta_i18n_pofile.find(md5hash, 'md5hash')
+                    # If someone did a makemessage, some entries might
+                    # have been removed, so we need to check.
+                    if entry:
+                        if plural_id is not None:
+                            plural_string = fix_nls(entry.msgstr_plural[plural_id], value)
+                            entry.msgstr_plural[plural_id] = plural_string
+                        else:
+                            entry.msgstr = fix_nls(entry.msgid, value)
+
+                        is_fuzzy = bool(request.POST.get('f_%s' % md5hash, False))
+
+                        if 'fuzzy' in entry.flags and not is_fuzzy:
+                            entry.flags.remove('fuzzy')
+                        elif 'fuzzy' not in entry.flags and is_fuzzy:
+                            entry.flags.append('fuzzy')
+                        file_change = True
+                    else:
+                        request.session['rosetta_last_save_error'] = True
+                        
+
+
             if file_change and rosetta_i18n_write:
                 
                 try:
@@ -180,6 +209,11 @@ def home(request):
         
         MESSAGES_SOURCE_LANGUAGE_NAME = rosetta_settings.MESSAGES_SOURCE_LANGUAGE_NAME
         MESSAGES_SOURCE_LANGUAGE_CODE = rosetta_settings.MESSAGES_SOURCE_LANGUAGE_CODE
+        
+        if 'rosetta_last_save_error' in request.session:
+            del(request.session['rosetta_last_save_error'])
+            rosetta_last_save_error = True
+            
         
         return render_to_response('rosetta/pofile.html', locals(), context_instance=RequestContext(request))
         
@@ -274,8 +308,9 @@ def lang_sel(request,langid,idx):
         request.session['rosetta_i18n_lang_name'] = unicode([l[1] for l in settings.LANGUAGES if l[0] == langid][0])
         request.session['rosetta_i18n_fn'] = file_
         po = pofile(file_)
-        for i in range(len(po)):
-            po[i].id = i
+        for entry in po:
+            entry.md5hash = hashlib.md5(entry.msgid.encode("utf8")+entry.msgstr.encode("utf8")).hexdigest()
+
             
         request.session['rosetta_i18n_pofile'] = po
         try:
