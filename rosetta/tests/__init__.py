@@ -239,3 +239,16 @@ class RosettaTestCase(TestCase):
         shutil.move(self.dest_file+'.orig', self.dest_file)
 
         
+    def test_10_issue_79_num_entries(self):
+        shutil.copy(self.dest_file, self.dest_file + '.orig')
+        shutil.copy(os.path.normpath(os.path.join(self.curdir,'./django.po.issue79.template')), self.dest_file)
+        
+        r = self.client.get(reverse('rosetta-pick-file') +'?rosetta')
+        
+        self.assertTrue('<td class="ch-messages r">1</td>' in r.content)
+        self.assertTrue('<td class="ch-progress r">0.00%</td>' in r.content)
+        self.assertTrue('<td class="ch-obsolete r">1</td>' in r.content)
+        
+        # reset the original file
+        shutil.move(self.dest_file+'.orig', self.dest_file)
+        
