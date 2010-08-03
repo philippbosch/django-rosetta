@@ -57,5 +57,7 @@ google.setOnLoadCallback(function() {
             return true;
         }
     });
+
+    $('.translation textarea').eq(0).focus();
     
 });

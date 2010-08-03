@@ -251,4 +251,8 @@ class RosettaTestCase(TestCase):
         
         # reset the original file
         shutil.move(self.dest_file+'.orig', self.dest_file)
-        
+    
+    def test_11_issue_80_tab_indexes(self):
+        r = self.client.get(reverse('rosetta-language-selection', args=('xx',0,), kwargs=dict() ) +'?rosetta')
+        r = self.client.get(reverse('rosetta-home'))
+        self.assertTrue('tabindex="3"' in r.content)
