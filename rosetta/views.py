@@ -15,7 +15,7 @@ from django.template import RequestContext
 
 
 try:
-    resolve(settings.LOGIN_URL)
+    resolve(force_unicode(settings.LOGIN_URL))
 except Resolver404:
     try:
         resolve('/admin/')
