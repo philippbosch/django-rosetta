@@ -140,6 +140,15 @@ def home(request):
                                 os.utime(request.environ.get('SCRIPT_FILENAME'), None)
                             except OSError:
                                 pass
+                    # Try auto-reloading via uwsgi daemon reload mechanism
+                    if rosetta_settings.UWSGI_AUTO_RELOAD:
+                        try:
+                            import uwsgi
+                            # pretty easy right?
+                            uwsgi.reload()
+                        except:
+                            # we may not be running under uwsgi :P
+                            pass
                         
                 except:
                     request.session['rosetta_i18n_write'] = False
