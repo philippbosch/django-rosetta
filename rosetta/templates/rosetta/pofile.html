@@ -121,7 +121,7 @@
                     {% else %}
                     {% trans "Displaying:" %}
                     {% endif %}
-                    <strong>{% blocktrans count rosetta_i18n_pofile|length as message_number and paginator.object_list|length as hits %}{{hits}}/{{message_number}} message{% plural %}{{hits}}/{{message_number}} messages{% endblocktrans %}</strong>
+                    <strong>{% blocktrans with hits=paginator.object_list|length count message_number=rosetta_i18n_pofile|length %}{{hits}}/{{message_number}} message{% plural %}{{hits}}/{{message_number}} messages{% endblocktrans %}</strong>
 
                     
                 </p>
